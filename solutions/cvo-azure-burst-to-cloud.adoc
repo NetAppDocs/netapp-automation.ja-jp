@@ -1,0 +1,443 @@
+---
+sidebar: sidebar 
+permalink: solutions/cvo-azure-burst-to-cloud.html 
+keywords: bluexp automation catalog, netapp automation solutions, azure, cloud volumes ontap, burst to cloud 
+summary: この自動化ソリューションを使用して、Terraformを使用してCloud Volumes ONTAP for Azureを導入できます。 
+---
+= Cloud Volumes ONTAP for Azure -クラウドへのバースト対応
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+この記事では、NetApp Cloud Volumes ONTAP for Azure自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。
+
+Cloud Volumes ONTAP for Azure自動化ソリューションは、Terraformを使用してCloud Volumes ONTAP for Azureのコンテナ化された導入を自動化するため、手動操作なしでCloud Volumes ONTAP for Azureを迅速に導入できます。
+
+.開始する前に
+* 自動化ソリューションは、BlueXP  Web UIからダウンロードする必要がありますlink:https://console.bluexp.netapp.com/automationCatalog["Cloud Volumes ONTAP Azure -クラウドへのバースト"^]。ソリューションはとしてパッケージ化されてい `CVO-Azure-Burst-To-Cloud.zip`ます。
+* Cloud Volumes ONTAPと同じネットワークにLinux VMをインストールする必要があります。
+* Linux VMをインストールしたら、このソリューションの手順に従って必要な依存関係をインストールする必要があります。
+
+
+
+
+== 手順1：DockerとDocker Composeをインストールする
+
+
+
+=== Docker をインストールする
+
+次の手順では、例としてUbuntu 20.04 Debian Linuxディストリビューションソフトウェアを使用します。実行するコマンドは、使用しているLinuxディストリビューションソフトウェアによって異なります。使用している構成に対応するLinuxディストリビューションソフトウェアのマニュアルを参照してください。
+
+.手順
+. 次のコマンドを実行してDockerをインストールし `sudo`ます。
++
+[source, cli]
+----
+sudo apt-get update
+sudo apt-get install apt-transport-https cacertificates curl gnupg-agent software-properties-common curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
+sudo apt-key add -
+sudo add-apt-repository “deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable”
+sudo apt-get update
+sudo apt-get install dockerce docker-ce-cli containerd.io
+----
+. インストールを確認します。
++
+[source, cli]
+----
+docker –version
+----
+. Linuxシステムに「docker」という名前のグループが作成されていることを確認します。必要に応じて、グループを作成します。
++
+[source, cli]
+----
+sudo groupadd docker
+----
+. Dockerにアクセスする必要があるユーザをグループに追加します。
++
+[source, cli]
+----
+sudo usermod -aG docker $(whoami)
+----
+. 変更内容は、ログアウトして端末に再度ログインした後に適用されます。または、変更をすぐに適用することもできます。
++
+[source, cli]
+----
+newgrp docker
+----
+
+
+
+
+=== Docker Composeのインストール
+
+.手順
+. 次のコマンドを実行して、Docker Composeをインストールし `sudo`ます。
++
+[source, cli]
+----
+sudo curl -L “https://github.com/docker/compose/releases/download/1.29.2/dockercompose-(𝑢𝑛𝑎𝑚𝑒 − 𝑠)−(uname -m)” -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+----
+. インストールを確認します。
++
+[source, cli]
+----
+docker-compose –version
+----
+
+
+
+
+== ステップ2：Dockerイメージを準備する
+
+.手順
+. Cloud Volumes ONTAPの導入に使用するLinux VMにフォルダをコピーし `CVO-Azure-Burst-To-Cloud.zip`ます。
++
+[source, cli]
+----
+scp -i ~/<private-key>.pem -r CVO-Azure-Burst-To-Cloud.zip <azureuser>@<IP_ADDRESS_OF_VM>:<LOCATION_TO_BE_COPIED>
+----
++
+** `private-key.pem`は、パスワードなしでログインするための秘密鍵ファイルです。
+** `azureuser`はVMのユーザ名です。
+** `IP_ADDRESS_OF_VM`はVMのIPアドレスです。
+** `LOCATION_TO_BE_COPIED`は、フォルダがコピーされる場所です。
+
+
+. フォルダを展開し `CVO-Azure-Burst-To-Cloud.zip`ます。フォルダは、カレントディレクトリまたはカスタムの場所に展開できます。
++
+現在のディレクトリにフォルダを展開するには、次のコマンドを実行します。
+
++
+[source, cli]
+----
+unzip CVO-Azure-Burst-To-Cloud.zip
+----
++
+カスタムの場所にフォルダを抽出するには、次のコマンドを実行します。
+
++
+[source, cli]
+----
+unzip CVO-Azure-Burst-To-Cloud.zip -d ~/<your_folder_name>
+----
+. コンテンツを展開したら、フォルダに移動し `CVO_Azure_Deployment`、次のコマンドを実行してファイルを表示します。
++
+[source, cli]
+----
+ ls -la
+----
++
+次の例のようなファイルの一覧が表示されます。
+
++
+[listing]
+----
+drwxr-xr-x@ 11 user1 staff 352 May 5 13:56 .
+drwxr-xr-x@ 5 user1 staff 160 May 5 14:24 ..
+-rw-r--r--@ 1 user1 staff 324 May 5 13:18 .env
+-rw-r--r--@ 1 user1 staff 1449 May 5 13:18 Dockerfile
+-rw-r--r--@ 1 user1 staff 35149 May 5 13:18 LICENSE
+-rw-r--r--@ 1 user1 staff 13356 May 5 14:26 README.md
+-rw-r--r-- 1  user1 staff 354318151 May 5 13:51 cvo_azure_flexcache_ubuntu_image_latest
+drwxr-xr-x@ 4 user1 staff 128 May 5 13:18 cvo_azure_variables
+-rw-r--r--@ 1 user1 staff 996 May 5 13:18 docker-compose-deploy.yml
+-rw-r--r--@ 1 user1 staff 1041 May 5 13:18 docker-compose-destroy.yml
+-rw-r--r--@ 1 user1 staff 4771 May 5 13:18 sp_role.json
+----
+. ファイルを探します `cvo_azure_flexcache_ubuntu_image_latest.tar.gz`。これには、Cloud Volumes ONTAP for Azureの導入に必要なDockerイメージが含まれています。
+. ファイルを解凍します。
++
+[source, cli]
+----
+docker load -i cvo_azure_flexcache_ubuntu_image_latest.tar.gz
+----
+. Dockerイメージがロードされるまで数分待ってから、Dockerイメージが正常にロードされたことを確認します。
++
+[source, cli]
+----
+docker images
+----
++
+次の例に示すように、タグで `latest`という名前のDockerイメージが表示され `cvo_azure_flexcache_ubuntu_image_latest`ます。
+
++
+[listing]
+----
+REPOSITORY TAG IMAGE ID CREATED SIZE
+cvo_azure_flexcache_ubuntu_image latest 18db15a4d59c 2 weeks ago 1.14GB
+----
+
+
+
+
+== 手順3:環境変数ファイルを作成する
+
+この段階では、2つの環境変数ファイルを作成する必要があります。1つは、サービスプリンシパルのクレデンシャルを使用したAzure Resource Manager APIの認証用のファイルです。2つ目のファイルは、BlueXP  TerraformモジュールがAzure APIを見つけて認証できるように環境変数を設定するためのものです。
+
+.手順
+. サービスプリンシパルを作成します。
++
+環境変数ファイルを作成する前に、の手順に従ってサービスプリンシパルを作成する必要があります。link:https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal["リソースにアクセスできるAzure Active Directoryアプリケーションとサービスプリンシパルを作成する"^]
+
+. 新しく作成したサービスプリンシパルに* Contributor *ロールを割り当てます。
+. カスタムロールを作成します。
++
+.. ファイルを探し `sp_role.json`、表示された操作で必要な権限を確認します。
+.. これらの権限を挿入し、新しく作成したサービスプリンシパルにカスタムロールを関連付けます。
+
+
+. [証明書とシークレット]*に移動し、*[新しいクライアントシークレット]*を選択してクライアントシークレットを作成します。
++
+クライアントシークレットを作成するときは、この値を再度表示できないため、* value *列の詳細を記録する必要があります。また、次の情報も記録する必要があります。
+
++
+** クライアントID
+** サブスクリプションID
+** テナントID
++
+この情報は、環境変数を作成する際に必要になります。クライアントIDとテナントIDの情報は、サービスプリンシパルUIの*[Overview]*セクションで確認できます。
+
+
+
+. 環境ファイルを作成します。
++
+.. 次の場所にファイルを作成し `azureauth.env`ます。
++
+`path/to/env-file/azureauth.env`
+
++
+... ファイルに次の内容を追加します。
++
+ClientID=<>clientSecret=<>サブスクリプションID=<> tenantId=<>
+
++
+形式*は、キーと値の間にスペースを入れずに、上記のとおりにする必要があります。
+
+
+
+.. 次の場所にファイルを作成し `credentials.env`ます。
++
+`path/to/env-file/credentials.env`
+
++
+... ファイルに次の内容を追加します。
++
+azure_tenant_ID=<> azure_client_secret=<> azure_client_ID=<> azure_subscription_ID=<>
+
++
+形式*は、キーと値の間にスペースを入れずに、上記のとおりにする必要があります。
+
+
+
+
+
+. ファイルに絶対ファイルパスを追加します `.env`。
++
+環境変数に対応するファイル `AZURE_RM_CREDS`に、環境ファイル `.env`の絶対パスを入力し `azureauth.env`ます。
+
++
+`AZURE_RM_CREDS=path/to/env-file/azureauth.env`
+
++
+環境変数に対応するファイル `BLUEXP_TF_AZURE_CREDS`に、環境ファイル `.env`の絶対パスを入力し `credentials.env`ます。
+
++
+`BLUEXP_TF_AZURE_CREDS=path/to/env-file/credentials.env`
+
+
+
+
+
+== 手順4：BlueXP  にCloud Volumes ONTAPライセンスを追加するか、BlueXP  にサブスクライブする
+
+BlueXP  にCloud Volumes ONTAPライセンスを追加するか、Azure MarketplaceでNetApp BlueXP  にサブスクライブできます。
+
+.手順
+. Azureポータルで、* SaaS *に移動し、* NetApp BlueXP  にサブスクライブ*を選択します。
+. Cloud Manager（Cap PYGO by Hour、WORM and data services）*プランを選択します。
++
+Cloud Volumes ONTAPと同じリソースグループを使用することも別のリソースグループを使用することもできます。
+
+. SaaSサブスクリプションをBlueXP  にインポートするようにBlueXP  ポータルを設定します。
++
+Azureポータルから直接構成するには、*[製品とプランの詳細]*に移動し、*[今すぐアカウントを構成]*オプションを選択します。
+
++
+その後、BlueXP  ポータルにリダイレクトされ、設定を確認します。
+
+. BlueXP  ポータルで*[保存]*を選択して設定を確認します。
+
+
+
+
+== 手順5：外部ボリュームを作成する
+
+Terraform状態ファイルとその他の重要なファイルを永続的に保持するには、外部ボリュームを作成する必要があります。ワークフローと導入環境を実行するには、Terraformでファイルを使用できることを確認する必要があります。
+
+.手順
+. Docker Composeの外部に外部ボリュームを作成します。
++
+[source, cli]
+----
+docker volume create « volume_name »
+----
++
+例：
+
++
+[listing]
+----
+docker volume create cvo_azure_volume_dst
+----
+. 次のいずれかのオプションを使用します。
++
+.. 環境ファイルに外部ボリュームパスを追加します `.env`。
++
+以下に示す正確な形式に従う必要があります。
+
++
+形式：
+
++
+`PERSISTENT_VOL=path/to/external/volume:/cvo_azure`
+
++
+例：
+`PERSISTENT_VOL=cvo_azure_volume_dst:/cvo_azure`
+
+.. NFS共有を外部ボリュームとして追加
++
+DockerコンテナがNFS共有と通信できること、および読み取り/書き込みなどの適切な権限が設定されていることを確認します。
+
++
+... 次のように、Docker Composeファイルで、外部ボリュームへのパスとしてNFS共有パスを追加します。Format：
++
+`PERSISTENT_VOL=path/to/nfs/volume:/cvo_azure`
+
++
+例：
+`PERSISTENT_VOL=nfs/mnt/document:/cvo_azure`
+
+
+
+
+
+. フォルダに移動し `cvo_azure_variables`ます。
++
+フォルダに次の変数ファイルが表示されます。
+
++
+`terraform.tfvars`
+
++
+`variables.tf`
+
+. 必要に応じて、ファイル内の値を変更し `terraform.tfvars`ます。
++
+ファイル内の変数値を変更する場合は、特定のサポートドキュメントを参照する必要があります `terraform.tfvars`。値は、リージョン、アベイラビリティゾーン、およびCloud Volumes ONTAP for Azureでサポートされるその他の要因によって異なります。これには、シングルノードおよびハイアベイラビリティ（HA）ペアのライセンス、ディスクサイズ、VMサイズが含まれます。
+
++
+ConnectorおよびCloud Volumes ONTAP Terraformモジュールでサポートされるすべての変数は、ファイルにすでに定義されてい `variables.tf`ます。ファイルに追加する前に、ファイル `terraform.tfvars`内の変数名を参照する必要があります `variables.tf`。
+
+. 要件に応じて、次のオプションをまたは `false`に設定することで、FlexCacheおよびFlexCloneを有効または無効にできます `true`。
++
+次に、FlexCacheとFlexCloneを有効にする例を示します。
+
++
+** `is_flexcache_required = true`
+** `is_flexclone_required = true`
+
+
+. 必要に応じて、Azure Active Directory ServiceからTerraform変数の値を取得できます `az_service_principal_object_id`。
++
+.. [エンタープライズアプリケーション]–>[すべてのアプリケーション]*に移動し、前の手順で作成したサービスプリンシパルの名前を選択します。
+.. オブジェクトIDをコピーし、Terraform変数の値を挿入します。
++
+`az_service_principal_object_id`
+
+
+
+
+
+
+
+== ステップ6：Cloud Volumes ONTAP for Azureを導入する
+
+Cloud Volumes ONTAP for Azureを導入するには、次の手順を実行します。
+
+.手順
+. ルートフォルダから次のコマンドを実行して導入を開始します。
++
+[source, cli]
+----
+docker-compose up -d
+----
++
+2つのコンテナがトリガーされます。1つ目のコンテナはCloud Volumes ONTAPを導入し、2つ目のコンテナはAutoSupportに計測データを送信します。
+
++
+2番目のコンテナは、最初のコンテナがすべてのステップを正常に完了するまで待機します。
+
+. ログファイルを使用して導入プロセスの進行状況を監視します。
++
+[source, cli]
+----
+docker-compose logs -f
+----
++
+このコマンドは、出力をリアルタイムで提供し、次のログファイルのデータをキャプチャします。
+
++
+`deployment.log`
+
++
+`telemetry_asup.log`
+
++
+これらのログファイルの名前を変更するには、次の環境変数を使用してファイルを編集し `.env`ます。
+
++
+`DEPLOYMENT_LOGS`
+
++
+`TELEMETRY_ASUP_LOGS`
+
++
+次の例は、ログファイル名を変更する方法を示しています。
+
++
+`DEPLOYMENT_LOGS=<your_deployment_log_filename>.log`
+
++
+`TELEMETRY_ASUP_LOGS=<your_telemetry_asup_log_filename>.log`
+
+
+
+.終了後
+次の手順を使用して、一時的な環境を削除し、導入プロセス中に作成された項目をクリーンアップできます。
+
+.手順
+. FlexCacheを導入した場合は、ファイルで次のオプションを設定する `terraform.tfvars`と、FlexCacheボリュームがクリーンアップされ、前の手順で作成した一時環境が削除されます。
++
+`flexcache_operation = "destroy"`
+
++
+
+NOTE: 指定可能なオプションは `deploy`、および `destroy`です。
+
+. FlexCloneを導入した場合は、ファイルで次のオプションを設定する `terraform.tfvars`と、FlexCloneボリュームがクリーンアップされ、前の手順で作成した一時環境が削除されます。
++
+`flexclone_operation = "destroy"`
+
++
+
+NOTE: 指定可能なオプションは `deploy`、および `destroy`です。
+
+

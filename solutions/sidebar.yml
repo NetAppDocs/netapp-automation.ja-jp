@@ -1,0 +1,40 @@
+---
+section: solutions
+title: BlueXP自動化カタログ
+entries:
+- title: 概要
+  url: "/solutions/bac-overview.html"
+- title: NetApp ONTAP 対応の Amazon FSX
+  entries:
+  - title: バースト時にクラウドを活用
+    url: "/solutions/fsxn-burst-to-cloud.html"
+  - title: ディザスタリカバリ
+    url: "/solutions/fsxn-disaster-recovery.html"
+- title: Azure NetApp Files
+  entries:
+  - title: Oracle
+    url: "/solutions/anf-oracle.html"
+- title: Cloud Volumes ONTAP for AWS
+  entries:
+  - title: バースト時にクラウドを活用
+    url: "/solutions/cvo-aws-burst-to-cloud.html"
+- title: Cloud Volumes ONTAP for Azure
+  entries:
+  - title: バースト時にクラウドを活用
+    url: "/solutions/cvo-azure-burst-to-cloud.html"
+- title: Cloud Volumes ONTAP for Google Cloud
+  entries:
+  - title: バースト時にクラウドを活用
+    url: "/solutions/cvo-gcp-burst-to-cloud.html"
+- title: ONTAP
+  entries:
+  - title: 1日目
+    entries:
+    - title: 概要
+      url: "/solutions/ontap-day01-overview.html"
+    - title: 準備
+      url: "/solutions/ontap-day01-prepare.html"
+    - title: 導入
+      url: "/solutions/ontap-day01-deploy.html"
+    - title: カスタマイズ
+      url: "/solutions/ontap-day01-customize.html"

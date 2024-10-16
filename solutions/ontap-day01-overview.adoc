@@ -1,0 +1,109 @@
+---
+sidebar: sidebar 
+permalink: solutions/ontap-day01-overview.html 
+keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, overview, introduction 
+summary: ONTAP Day 0/1自動化ソリューションを使用して、Ansibleを使用してONTAPクラスタを導入および構成できます。 
+---
+= ONTAP Day 0/1ソリューションの概要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+ONTAP Day 0/1自動化ソリューションを使用して、Ansibleを使用してONTAPクラスタを導入および構成できます。解決策はから入手できますlink:https://console.bluexp.netapp.com/automationCatalog["BlueXP自動化カタログ"^]。
+
+
+
+== 柔軟なONTAP導入オプション
+
+要件に応じて、オンプレミスのハードウェアまたはSimulate ONTAPを使用して、Ansibleを使用してONTAPクラスタを導入および設定できます。
+
+.オンプレミスのハードウェア
+このソリューションは、FASやAFFシステムなど、ONTAPを実行しているオンプレミスのハードウェアを使用して導入できます。Ansibleを使用してONTAPクラスタを導入および設定するには、Linux VMを使用する必要があります。
+
+.Simulate ONTAP
+ONTAPシミュレータを使用してこのソリューションを導入するには、NetAppサポートサイトからSimulate ONTAPの最新バージョンをダウンロードする必要があります。Simulate ONTAPは、ONTAPソフトウェアの仮想シミュレータです。Simulate ONTAPは、Windows、Linux、またはMacシステム上のVMwareハイパーバイザーで実行されます。WindowsホストおよびLinuxホストでは、VMware Workstationハイパーバイザーを使用してこのソリューションを実行する必要があります。Mac OSを使用している場合は、VMware Fusionハイパーバイザーを使用します。
+
+
+
+== レイヤーデザイン
+
+Ansibleフレームワークは、自動化の実行タスクとロジックタスクの開発と再利用を簡易化します。このフレームワークは、意思決定タスク（ロジックレイヤ）と自動化における実行ステップ（実行レイヤ）を区別します。これらのレイヤの仕組みを理解することで、構成をカスタマイズできます。
+
+Ansibleの「プレイブック」は、一連のタスクを最初から最後まで実行します。 `site.yml`PlaybookにはPlaybookと `execution.yml`Playbookが含まれてい `logic.yml`ます。
+
+要求が実行されると、 `site.yml`Playbookは最初にPlaybookを呼び出し `logic.yml`、次にPlaybookを呼び出し `execution.yml`てサービス要求を実行します。
+
+フレームワークのロジックレイヤを使用する必要はありません。ロジック層は、実行のためにハードコードされた値を超えてフレームワークの機能を拡張するためのオプションを提供します。これにより、必要に応じてフレームワークの機能をカスタマイズできます。
+
+.ロジック層
+ロジックレイヤは次の要素で構成されています。
+
+*  `logic.yml`プレイブック
+* ディレクトリ内のロジックタスクファイル `logic-tasks`
+
+
+ロジックレイヤは、大幅なカスタム統合（ServiceNowへの接続など）を必要とせずに、複雑な意思決定を行う機能を提供します。ロジック層はコンフィグレーション可能で、マイクロサービスへの入力を提供します。
+
+ロジック層をバイパスする機能も提供されています。ロジックレイヤをバイパスする場合は、変数を定義しない `logic_operation`でください。プレイブックを直接呼び出す `logic.yml`と、実行せずにある程度のレベルのデバッグを実行できます。「debug」ステートメントを使用して、の値が正しいことを確認できます `raw_service_request`。
+
+重要な考慮事項：
+
+*  `logic.yml`プレイブックによって変数が検索され `logic_operation`ます。リクエストで変数が定義されている場合は、ディレクトリからタスクファイルをロードし `logic-tasks`ます。タスクファイルは.ymlファイルである必要があります。一致するタスクファイルがなく、変数が定義されている場合、 `logic_operation`ロジックレイヤは失敗します。
+* 変数のデフォルト値 `logic_operation`はです `no-op`。変数が明示的に定義されていない場合は、デフォルトでが設定され `no-op`、操作は実行されません。
+* 変数がすでに定義されている場合、 `raw_service_request`実行は実行レイヤに進みます。変数が定義されていない場合、ロジックレイヤは失敗します。
+
+
+.実行レイヤ
+実行レイヤは次の要素で構成されます。
+
+*  `execution.yml`プレイブック
+
+
+実行レイヤは、ONTAPクラスタを設定するためのAPI呼び出しを行います。プレイブックで `execution.yml`は、実行時に変数が定義されている必要があり `raw_service_request`ます。
+
+
+
+== カスタマイズのサポート
+
+このソリューションは、要件に応じてさまざまな方法でカスタマイズできます。
+
+カスタマイズオプションは次のとおりです。
+
+* Ansibleプレイブックの変更
+* ロールを追加する
+
+
+.Ansibleファイルのカスタマイズ
+次の表に、このソリューションに含まれるカスタマイズ可能なAnsibleファイルを示します。
+
+[cols="25,75"]
+|===
+| 場所 | 製品説明 
+
+
+ a| 
+`playbooks/inventory/hosts`
+| ホストとグループのリストを含む単一のファイルが格納されます。 
+
+
+ a| 
+`playbooks/group_vars/all/*`
+| Ansibleを使用すると、変数を一度に複数のホストに適用できます。このフォルダ内のファイル（、、 `clusters.yml`、 `defaults.yml` `services.yml`、、 `standards.yml`など）の一部またはすべてを変更できます `cfg.yml` `vault.yml`。 
+
+
+ a| 
+`playbooks/logic-tasks`
+| Ansible内の意思決定タスクをサポートし、ロジックと実行の分離を維持します。該当するサービスに対応するファイルをこのフォルダに追加できます。 
+
+
+ a| 
+`playbooks/vars/*`
+| Ansibleのプレイブックとロールで使用される動的な値により、構成のカスタマイズ、柔軟性、再利用が可能になります。必要に応じて、このフォルダ内のファイルの一部またはすべてを変更できます。 
+|===
+.ロールのカスタマイズ
+Ansibleのロール（マイクロサービスとも呼ばれます）を追加または変更してソリューションをカスタマイズすることもできます。詳細については、を参照してくださいlink:ontap-day01-customize.html["カスタマイズ"]。

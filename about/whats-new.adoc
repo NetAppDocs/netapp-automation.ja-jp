@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: about/whats-new.html 
+keywords: whats new, enhancements, new features 
+summary: NetAppでは、自動化ソリューション、製品REST API、関連ソフトウェアを定期的に更新して、新機能や機能拡張、バグ修正を提供しています。 
+---
+= NetApp自動化の最新情報
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetAppでは、自動化ソリューション、製品REST API、関連ソフトウェアを定期的に更新して、新機能や機能拡張、バグ修正を提供しています。
+
+
+
+== 2023年7月27日
+
+.Cloud Volumes ONTAP
+Cloud Volumes ONTAPのサポートは、パブリッククラウド環境によって編成されています。以下のクラウド環境向けの新しいソリューションが提供されます。
+
+* link:../solutions/cvo-gcp-burst-to-cloud.html["Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト"]
+
+
+
+
+== 2023年6月4日
+
+NetAppは https://console.bluexp.netapp.com/automationCatalog["BlueXP自動化カタログ"^]、BlueXP  のWebユーザインターフェイスから使用できます。自動化カタログには、NetApp製品の導入と統合の自動化に役立つソリューションが用意されています。これらのソリューションのドキュメントは、以下で説明するように、いくつかの異なる製品または機能領域で構成されています。
+
+.NetApp ONTAP 対応の Amazon FSX
+2つのAmazon FSx for NetApp ONTAPソリューションが提供されます。
+
+* link:../solutions/fsxn-burst-to-cloud.html["Amazon FSx for NetApp ONTAP -クラウドへのバースト"]
+* link:../solutions/fsxn-disaster-recovery.html["Amazon FSx for NetApp ONTAP -ディザスタリカバリ"]
+
+
+.Azure NetApp Files
+Azure NetApp Filesを使用したOracleの導入を支援するソリューションが含まれています。
+
+* link:../solutions/anf-oracle.html["Azure NetApp Filesを使用したOracle"]
+
+
+.Cloud Volumes ONTAP
+Cloud Volumes ONTAPのサポートは、パブリッククラウド環境によって編成されています。初期のソリューションは次の2つのクラウド環境で提供されます。
+
+* link:../solutions/cvo-aws-burst-to-cloud.html["Cloud Volumes ONTAP AWS -クラウドへのバースト"]
+* link:../solutions/cvo-azure-burst-to-cloud.html["Cloud Volumes ONTAP Azure -クラウドへのバースト"]
+

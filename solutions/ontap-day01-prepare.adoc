@@ -1,0 +1,207 @@
+---
+sidebar: sidebar 
+permalink: solutions/ontap-day01-prepare.html 
+keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, prepare 
+summary: 自動化ソリューションを導入する前に、ONTAP環境を準備し、Ansibleをインストールして設定する必要があります。 
+---
+= ONTAP Day 0/1ソリューションの使用準備
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+自動化ソリューションを導入する前に、ONTAP環境を準備し、Ansibleをインストールして設定する必要があります。
+
+
+
+== 初期計画に関する考慮事項
+
+このソリューションを使用してONTAPクラスタを導入する前に、次の要件と考慮事項を確認しておく必要があります。
+
+.基本的な要件
+このソリューションを使用するには、次の基本要件を満たす必要があります。
+
+* オンプレミスまたはONTAPシミュレータを介してONTAPソフトウェアにアクセスできる必要があります。
+* ONTAPソフトウェアの使用方法を理解しておく必要があります。
+* Ansible自動化ソフトウェアツールの使用方法を理解しておく必要があります。
+
+
+.計画に関する考慮事項
+この自動化ソリューションを導入する前に、次の事項を決定する必要があります。
+
+* Ansibleコントロールノードを実行する場所。
+* ONTAPシステム（オンプレミスのハードウェアまたはONTAPシミュレータ）。
+* カスタマイズが必要かどうか。
+
+
+
+
+== ONTAPシステムの準備
+
+オンプレミスのONTAPシステムを使用している場合でも、ONTAPをシミュレートしている場合でも、自動化ソリューションを導入する前に環境を準備する必要があります。
+
+
+
+=== 必要に応じて、Simulate ONTAPをインストールして設定
+
+ONTAPシミュレータを使用してこのソリューションを導入する場合は、Simulate ONTAPをダウンロードして実行する必要があります。
+
+.開始する前に
+* Simulate ONTAPの実行に使用するVMwareハイパーバイザーをダウンロードしてインストールする必要があります。
++
+** WindowsまたはLinux OSを使用している場合は、VMware Workstationを使用します。
+** Mac OSを使用している場合は、VMware Fusionを使用します。
++
+
+NOTE: Mac OSを使用している場合は、Intelプロセッサが必要です。
+
+
+
+
+
+.手順
+ローカル環境に2つのONTAPシミュレータをインストールするには、次の手順を実行します。
+
+. からSimulate ONTAPをダウンロードしますlink:https://mysupport.netapp.com/site/tools/tool-eula/simulate-ontap["NetApp Support Site"^]。
++
+
+NOTE: 2つのONTAPシミュレータをインストールしますが、ダウンロードする必要があるのはソフトウェアのコピーを1つだけです。
+
+. VMwareアプリケーションがまだ実行されていない場合は、起動します。
+. ダウンロードしたシミュレータファイルを見つけ、右クリックしてVMwareアプリケーションで開きます。
+. 最初のONTAPインスタンスの名前を設定します。
+. シミュレータがブートするまで待ち、指示に従ってシングルノードクラスタを作成します。
++
+2つ目のONTAPインスタンスに対して同じ手順を繰り返します。
+
+. 必要に応じて、フルディスク補完を追加します。
++
+各クラスタから、次のコマンドを実行します。
+
++
+[source, cli]
+----
+security unlock -username <user_01>
+security login password -username <user_01>
+set -priv advanced
+systemshell local
+disk assign -all -node <Cluster-01>-01
+----
+
+
+
+
+=== ONTAPシステムの状態
+
+ONTAPシステムがオンプレミスで実行されているか、ONTAPシミュレータを介して実行されているかを問わず、システムの初期状態を確認する必要があります。
+
+次のONTAPシステム要件を満たしていることを確認します。
+
+* ONTAPがインストールされ、クラスタが定義されていない状態で実行されている。
+* ONTAPがブートし、クラスタにアクセスするためのIPアドレスが表示されます。
+* ネットワークに到達できます。
+* 管理者クレデンシャルが必要です。
+* Message of the Day（MOTD）バナーに管理アドレスが表示されます。
+
+
+
+
+== 必要な自動化ソフトウェアのインストール
+
+このセクションでは、Ansibleのインストール方法と導入のための自動化ソリューションの準備方法について説明します。
+
+
+
+=== Ansibleをインストール
+
+AnsibleはLinuxシステムまたはWindowsシステムにインストールできます。
+
+AnsibleでONTAPクラスタとの通信に使用されるデフォルトの通信方法はSSHです。
+
+Ansibleのインストールについては、を参照してくださいlink:https://netapp.io/2018/10/08/getting-started-with-netapp-and-ansible-install-ansible/["ネットアップと Ansible の使用： Ansible のインストール"^]。
+
+
+NOTE: Ansibleはシステムの制御ノードにインストールする必要があります。
+
+
+
+=== 自動化ソリューションをダウンロードして準備する
+
+導入用の自動化ソリューションをダウンロードして準備するには、次の手順を実行します。
+
+. BlueXP  Web UIから自動化ソリューションをダウンロードしますlink:https://console.bluexp.netapp.com/automationCatalog["ONTAP - 1日目およびヘルスチェック"^]。ソリューションはとしてパッケージ化されてい `ONTAP_DAY0_DAY1.zip`ます。
+. zipフォルダを展開し、Ansible環境内の制御ノード上の目的の場所にファイルをコピーします。
+
+
+
+
+== Ansibleフレームワークの初期構成
+
+Ansibleフレームワークの初期設定を実行します。
+
+. に移動します `playbooks/inventory/group_vars/all`。
+. ファイルを復号化 `vault.yml`します。
++
+`ansible-vault decrypt playbooks/inventory/group_vars/all/vault.yml`
+
++
+ボルトパスワードの入力を求められたら、次の一時パスワードを入力します。
+
++
+`NetApp123!`
+
++
+
+IMPORTANT: 「NetApp123！」は、ファイルとそれに対応するバックアップパスワードを復号化するための一時的なパスワード `vault.yml`です。最初に使用した後は、自分のパスワードを使用してファイルを*暗号化する必要があります。
+
+. 次のAnsibleファイルを変更します。
++
+** `clusters.yml`-このファイルの値を環境に合わせて変更します。
+** `vault.yml`-ファイルを復号化したら、ONTAPクラスタ、ユーザ名、およびパスワードの値を環境に合わせて変更します。
+** `cfg.yml`-のファイルパスを設定し `log2file`、で `cfg`をに設定し `show_request`てを `True`表示します `raw_service_request`。
++
+ `raw_service_request`変数は、ログファイルおよび実行中に表示されます。
+
++
+
+NOTE: リストされている各ファイルには、要件に応じて変更する方法に関するコメントが含まれています。
+
+
+
+. ファイルを再暗号化し `vault.yml`ます。
++
+`ansible-vault encrypt playbooks/inventory/group_vars/all/vault.yml`
+
++
+
+NOTE: 暗号化時にボルトの新しいパスワードを選択するように求められます。
+
+. 有効なPythonインタプリタに移動し `playbooks/inventory/hosts`て設定します。
+. サービスを導入し `framework_test`ます。
++
+次のコマンドは、値を `cluster_identity_info`指定してモジュールを `gather_subset`実行し `na_ontap_info`ます。これにより、基本的な設定が正しいかどうか、およびクラスタと通信できるかどうかが検証されます。
+
++
+[source, cli]
+----
+ansible-playbook -i inventory/hosts site.yml -e cluster_name=<CLUSTER_NAME>
+-e logic_operation=framework-test
+----
++
+クラスタごとにコマンドを実行します。
+
++
+成功すると、次の例のような出力が表示されます。
+
++
+[listing]
+----
+PLAY RECAP *********************************************************************************
+localhost : ok=12 changed=1 unreachable=0 failed=0 skipped=6
+The key is ‘rescued=0’ and ‘failed=0’..
+----
+

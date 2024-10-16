@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: support/get-help.html 
+keywords: help, support, netapp support, technical support, kb, communities 
+summary: NetAppは、自社の製品やクラウドサービスをさまざまな方法でサポートしています。ナレッジベース（ KB ）記事やコミュニティフォーラムなど、 24 時間 365 日利用可能な幅広いセルフサポートオプションをご用意しています。 
+---
+= ヘルプを表示します
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetAppは、自社の製品やクラウドサービスをさまざまな方法でサポートしています。ナレッジベース（ KB ）記事やコミュニティフォーラムなど、 24 時間 365 日利用可能な幅広いセルフサポートオプションをご用意しています。
+
+
+
+== セルフサポートオプション
+
+* https://kb.netapp.com/["ナレッジベース"^]
++
+ナレッジベースを検索して、問題のトラブルシューティングに役立つ記事を見つけます。
+
+* http://community.netapp.com/["コミュニティ"^]
++
+NetAppコミュニティに参加して、進行中のディスカッションをフォローしたり、新しいディスカッションを作成したりできます。
+
+* https://mysupport.netapp.com/["NetAppのサポート"^]
++
+トラブルシューティングツール、ドキュメント、およびテクニカルサポートにアクセスできます。
+
+

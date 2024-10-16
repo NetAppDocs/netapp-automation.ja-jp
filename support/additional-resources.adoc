@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: support/additional-resources.html 
+keywords: addition resources, additional information, netapp documentation 
+summary: NetApp製品とクラウドサービスに関するサポートや詳細情報を入手するためのその他のリソースが用意されています。 
+---
+= その他のリソース
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetApp製品とクラウドサービスに関するサポートや詳細情報を入手するためのその他のリソースが用意されています。
+
+
+
+== NetApp開発者向けリソース
+
+* https://devnet.netapp.com/["ネットアップの DevNet"^]
++
+NetAppパートナーとお客様をサポートする開発者リソースを一元的に配置できます。
+
+* https://netapp.io/["NetApp IO - The Pub"^]
++
+開発者と管理者をサポートするブログ記事やその他のリソース。
+
+
+
+
+
+== ネットアップのクラウドリソース
+
+* https://bluexp.netapp.com/["NetApp BlueXP"^]
++
+ネットアップのクラウドソリューションの中心的なサイト。
+
+* https://services.cloud.netapp.com/redirect-to-login?startOnSignup=false["NetApp Cloud Central コンソール"^]
++
+NetApp Cloud Central サービスコンソールにサインインします。
+
+

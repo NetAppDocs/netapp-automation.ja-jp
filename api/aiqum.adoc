@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: api/aiqum.html 
+keywords: active iq, unified manager, active iq unified manager 
+summary: Active IQ Unified Manager（旧OnCommand Unified Manager）は、ONTAPシステムの包括的な管理と監視を提供します。また、これらのタスクを自動化し、サポート対象のシステムでサードパーティとの統合を可能にするREST APIも含まれています。 
+---
+= Active IQ Unified Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Active IQ Unified Manager（旧OnCommand Unified Manager）は、ONTAPシステムの包括的な管理と監視を提供します。また、これらのタスクを自動化し、サポート対象のシステムでサードパーティとの統合を可能にするREST APIも含まれています。
+
+
+
+== REST APIのメリット
+
+Active IQ Unified Managerに付属のREST APIを使用すると、いくつかの利点があります。
+
+.強力な機能
+REST APIを使用すると、Active IQ Unified Manager機能にアクセスして、ストレージの可用性、容量、セキュリティ、保護、パフォーマンスのリスクを管理できます。
+
+.自動化の統合
+ワークロードのプロビジョニングと管理に使用できるRESTエンドポイントは1つです。これにより、サービスレベル目標のポリシーを実装し、イベントをサードパーティのツールにリダイレクトし、個 々 のクラスタレベルでONTAP REST APIにアクセスするためのAPIゲートウェイとして機能する、シンプルな統合アプローチが提供されます。
+
+.ONTAP管理のデータセンターレベルの自動化
+ONTAPのプロビジョニングと管理のワークフローをデータセンターレベルで自動化できます。監視とレポート作成も自動化できます。これにより、効率が向上し、データセンターレベルのアグリゲーションの基盤が提供されます。
+
+
+
+== 詳細情報
+
+Active IQ Unified Manager REST APIの使用を開始する際に役立つリソースがいくつか用意されています。
+
+* https://docs.netapp.com/us-en/active-iq-unified-manager/api-automation/concept_get_started_with_um_apis.html["Active IQ Unified Manager REST APIでの作業の開始"^]
+* https://library.netapp.com/ecmdocs/ECMLP2876865/html/index.html["Active IQ Unified Manager APIのドキュメント"^]
+* https://github.com/NetApp/Ansible-with-Active-IQ-Unified-Manager["AnsibleヨウノNetAppモシユウル"^]
+

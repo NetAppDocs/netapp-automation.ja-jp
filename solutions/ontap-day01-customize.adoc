@@ -1,0 +1,182 @@
+---
+sidebar: sidebar 
+permalink: solutions/ontap-day01-customize.html 
+keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, customize, add roles 
+summary: ONTAPのDay 0/1ソリューションを要件に合わせてカスタマイズするには、Ansibleのロールを追加または変更します。 
+---
+= ONTAP Day 0/1ソリューションのカスタマイズ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+ONTAPのDay 0/1ソリューションを要件に合わせてカスタマイズするには、Ansibleのロールを追加または変更します。
+
+ロールは、Ansibleフレームワーク内のマイクロサービスを表します。各マイクロサービスが1つの処理を実行します。たとえば、ONTAPの0日目は、複数のマイクロサービスを含むサービスです。
+
+
+
+== Ansibleロールを追加
+
+Ansibleのロールを追加して、環境に合わせてソリューションをカスタマイズできます。必要なロールは、Ansibleフレームワーク内のサービス定義によって定義されます。
+
+あるロールをマイクロサービスとして使用するには、次の要件を満たす必要があります。
+
+* 変数内の引数のリストを受け入れ `args`ます。
+* Ansibleの「block、rescue、always」構造を使用して、各ブロックに特定の要件を設定します。
+* 単一のAnsibleモジュールを使用し、ブロック内に1つのタスクを定義します。
+* このセクションで説明する要件に従って、使用可能なすべてのモジュールパラメータを実装します。
+
+
+.必要なマイクロサービス構造
+各ロールが次の変数をサポートしている必要があります。
+
+* `mode`:モードがロールに設定されている場合は `test`、ロールが実際に実行されずに何を行うかを示すをインポートしようとし `test.yml`ます。
++
+
+NOTE: 特定の相互依存性のため、これを実装することは必ずしも可能ではありません。
+
+* `status`:プレイブックの実行の全体的なステータス。値が設定されていない場合、 `success`ロールは実行されません。
+* `args`:ロールパラメータ名と一致するキーを持つロール固有のディクショナリのリスト。
+* `global_log_messages`：プレイブックの実行中にログメッセージを収集します。ロールが実行されるたびに1つのエントリが生成されます。
+* `log_name`:エントリ内のロールを参照するために使用される名前 `global_log_messages`。
+* `task_descr`:役割の機能の簡単な説明。
+* `service_start_time`:各ロールが実行された時間を追跡するために使用されるタイムスタンプ。
+* `playbook_status`：Ansible Playbookのステータス。
+* `role_result`:ロール出力を含み、エントリ内の各メッセージに含まれる変数 `global_log_messages`。
+
+
+
+
+== ロール構造の例
+
+次の例は、マイクロサービスを実装するロールの基本的な構造を示しています。この例では、構成に応じて変数を変更する必要があります。
+
+.例を示します
+[%collapsible]
+====
+基本的な役割構造：
+
+[source, cli]
+----
+- name:  Set some role attributes
+  set_fact:
+    log_name:     "<LOG_NAME>"
+    task_descr:   "<TASK_DESCRIPTION>"
+
+-  name: "{{ log_name }}"
+   block:
+      -  set_fact:
+            service_start_time: "{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+
+      -  name: "Provision the new user"
+         <MODULE_NAME>:
+            #-------------------------------------------------------------
+            # COMMON ATTRIBUTES
+            #-------------------------------------------------------------
+            hostname:            "{{ clusters[loop_arg['hostname']]['mgmt_ip'] }}"
+            username:            "{{ clusters[loop_arg['hostname']]['username'] }}"
+            password:            "{{ clusters[loop_arg['hostname']]['password'] }}"
+
+            cert_filepath:       "{{ loop_arg['cert_filepath']                | default(omit) }}"
+            feature_flags:       "{{ loop_arg['feature_flags']                | default(omit) }}"
+            http_port:           "{{ loop_arg['http_port']                    | default(omit) }}"
+            https:               "{{ loop_arg['https']                        | default('true') }}"
+            ontapi:              "{{ loop_arg['ontapi']                       | default(omit) }}"
+            key_filepath:        "{{ loop_arg['key_filepath']                 | default(omit) }}"
+            use_rest:            "{{ loop_arg['use_rest']                     | default(omit) }}"
+            validate_certs:      "{{ loop_arg['validate_certs']               | default('false') }}"
+
+            <MODULE_SPECIFIC_PARAMETERS>
+            #-------------------------------------------------------------
+            # REQUIRED ATTRIBUTES
+            #-------------------------------------------------------------
+            required_parameter:     "{{ loop_arg['required_parameter'] }}"
+            #-------------------------------------------------------------
+            # ATTRIBUTES w/ DEFAULTS
+            #-------------------------------------------------------------
+            defaulted_parameter:    "{{ loop_arg['defaulted_parameter'] | default('default_value') }}"
+            #-------------------------------------------------------------
+            # OPTIONAL ATTRIBUTES
+            #-------------------------------------------------------------
+            optional_parameter:     "{{ loop_arg['optional_parameter'] | default(omit) }}"
+         loop:    "{{ args }}"
+         loop_control:
+            loop_var:   loop_arg
+         register:   role_result
+
+   rescue:
+      -  name: Set role status to FAIL
+         set_fact:
+            playbook_status:   "failed"
+
+   always:
+      -  name: add log msg
+         vars:
+            role_log:
+               role: "{{ log_name }}"
+               timestamp:
+                  start_time: "{{service_start_time}}"
+                  end_time: "{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}"
+               service_status: "{{ playbook_status }}"
+               result: "{{role_result}}"
+         set_fact:
+            global_log_msgs:   "{{ global_log_msgs + [ role_log ] }}"
+----
+====
+.ロール例で使用されている変数は次のとおりです。
+* `<NAME>`：マイクロサービスごとに指定する必要がある交換可能な値。
+* `<LOG_NAME>`：ロギングに使用するロールの省略形の名前。たとえば、 `ONTAP_VOLUME`です。
+* `<TASK_DESCRIPTION>`：マイクロサービスの機能の簡単な説明。
+* `<MODULE_NAME>`：タスクのAnsibleモジュール名。
++
+
+NOTE: トップレベルの `execute.yml`プレイブックでコレクションを指定します `netapp.ontap`。モジュールがコレクションの一部である場合、 `netapp.ontap`モジュール名を完全に指定する必要はありません。
+
+* `<MODULE_SPECIFIC_PARAMETERS>`:マイクロサービスの実装に使用するモジュールに固有のAnsibleモジュールパラメータ。次のリストでは、パラメータのタイプとそのグループ化方法について説明します。
++
+** 必須パラメータ：すべての必須パラメータをデフォルト値なしで指定します。
+** マイクロサービス固有のデフォルト値を持つパラメータ(モジュールのドキュメントで指定されているデフォルト値とは異なる)。
+** 残りのパラメータはすべてデフォルト値として使用され `default(omit)`ます。
+
+
+
+
+
+
+== マルチレベルディクショナリをモジュールパラメータとして使用する
+
+NetAppが提供する一部のAnsibleモジュールでは、モジュールパラメータ（固定QoSポリシーグループやアダプティブQoSポリシーグループなど）にマルチレベルディクショナリを使用します。
+
+これらのディクショナリが使用されている場合、特に複数のディクショナリがあり、それらが相互に排他的である場合は、単独で使用することは `default(omit)`機能しません。
+
+マルチレベルディクショナリをモジュールパラメータとして使用する必要がある場合は、機能を複数のマイクロサービス(ロール)に分割して、それぞれが関連するディクショナリに少なくとも1つのセカンドレベルディクショナリ値を確実に提供できるようにする必要があります。
+
+次の例は、2つのマイクロサービスに分割された固定QoSポリシーグループとアダプティブQoSポリシーグループを示しています。
+
+1つ目のマイクロサービスには、固定QoSポリシーグループ値が含まれています。
+
+[listing]
+----
+fixed_qos_options:
+  capacity_shared:           "{{ loop_arg['fixed_qos_options']['capacity_shared']         | default(omit) }}"
+  max_throughput_iops:       "{{ loop_arg['fixed_qos_options']['max_throughput_iops']     | default(omit) }}"
+  min_throughput_iops:       "{{ loop_arg['fixed_qos_options']['min_throughput_iops']     | default(omit) }}"
+  max_throughput_mbps:       "{{ loop_arg['fixed_qos_options']['max_throughput_mbps']     | default(omit) }}"
+  min_throughput_mbps:       "{{ loop_arg['fixed_qos_options']['min_throughput_mbps']     | default(omit) }}"
+
+----
+2つ目のマイクロサービスには、アダプティブQoSポリシーグループの値が含まれています。
+
+[listing]
+----
+adaptive_qos_options:
+  absolute_min_iops:         "{{ loop_arg['adaptive_qos_options']['absolute_min_iops'] | default(omit) }}"
+  expected_iops:             "{{ loop_arg['adaptive_qos_options']['expected_iops']     | default(omit) }}"
+  peak_iops:                 "{{ loop_arg['adaptive_qos_options']['peak_iops']         | default(omit) }}"
+
+----

@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: api/bluexp.html 
+keywords: netapp products, product api, rest, rest api, bluexp, bluexp control plane 
+summary: NetApp BlueXP  BlueXP  は、オンプレミス環境とパブリッククラウド環境の両方でストレージとデータサービスを管理するためのハイブリッドマルチクラウドプラットフォームを提供する統合コントロールプレーンです。複数の個別のサービスまたはコンポーネントで構成され、それぞれに関連するREST APIが公開されます。BlueXP  環境の自動化を開始するには、次のドキュメントと関連リソースを参照してください。 
+---
+= BlueXP  コントロールプレーン
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetApp BlueXP  BlueXP  は、オンプレミス環境とパブリッククラウド環境の両方でストレージとデータサービスを管理するためのハイブリッドマルチクラウドプラットフォームを提供する統合コントロールプレーンです。複数の個別のサービスまたはコンポーネントで構成され、それぞれに関連するREST APIが公開されます。BlueXP  REST APIを使用したBlueXP  環境の自動化を開始するには、次のドキュメントと関連リソースを参照してください。
+
+.BlueXP  REST API
+さまざまなREST APIを使用して、BlueXP  で管理されるストレージおよびデータサービスの管理を自動化できます。
+
+* https://docs.netapp.com/us-en/bluexp-automation/["BlueXP APIのドキュメント"^]
+
+
+.BlueXP  ファミリー
+BlueXP  ファミリーのドキュメントには、BlueXP  コントロールプレーンの使用を開始するために必要なすべての情報が記載されています。
+
+* https://docs.netapp.com/us-en/bluexp-family/["BlueXPのマニュアル"^]
+

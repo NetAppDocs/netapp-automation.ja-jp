@@ -1,0 +1,33 @@
+---
+indexpage:
+  title: NetApp の自動化
+  summary: NetAppでは、ネットアップの多くの製品向けのプログラムAPIや、NetAppの製品やサービスポートフォリオのワークロードの自動化に役立つスクリプト化された自動化ソリューションを利用できます。
+  keywords: automation, netapp automation
+  lead: NetAppでは、ネットアップの多くの製品向けのプログラムAPIや、NetAppの製品やサービスポートフォリオのワークロードの自動化に役立つスクリプト化された自動化ソリューションを利用できます。
+  tiles:
+  - title: 開始する
+    links:
+    - title: 新機能
+      url: "/about/whats-new.html"
+    - title: BlueXP自動化カタログ
+      url: "/solutions/bac-overview.html"
+    - title: その他のリソース
+      url: "/support/additional-resources.html"
+  - title: ハイライトされたソリューション
+    links:
+    - title: OracleとAzure NetApp Files
+      url: "/solutions/anf-oracle.html"
+    - title: Amazon FSx for ONTAP -ディザスタリカバリ
+      url: "/solutions/fsxn-disaster-recovery.html"
+    - title: ONTAPの導入初日
+      url: "/solutions/ontap-day01-overview.html"
+  - title: NetApp製品API
+    links:
+    - title: ONTAP
+      url: "/api/ontap.html"
+    - title: BlueXP
+      url: "/api/bluexp.html"
+    - title: Astra Control
+      url: "/api/astra.html"
+    - title: Active IQ Unified Manager
+      url: "/api/aiqum.html"

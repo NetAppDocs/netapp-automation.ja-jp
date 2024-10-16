@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: api/astra.html 
+keywords: netapp products, product api, rest, rest api, astra, astra control 
+summary: Astra Controlは、複数の環境のKubernetesクラスタに対してアプリケーション対応のデータ管理を提供するNetAppソフトウェア製品です。2つの導入モデルで共通のREST APIを共有します。Astra環境の自動化を開始するには、以下に記載されているドキュメントと関連リソースを参照してください。 
+---
+= Astra Control
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Astra Controlは、複数の環境のKubernetesクラスタに対してアプリケーション対応のデータ管理を提供するNetAppソフトウェア製品です。2つの導入モデルで共通のREST APIを共有します。Astra Control REST APIを使用したAstra導入の自動化については、下記のドキュメントと関連リソースを参照してください。
+
+.Astra Control REST API
+REST APIを使用して、Astra Control ServiceとAstra Control Center環境の管理を自動化できます。
+
+* https://docs.netapp.com/us-en/astra-automation/["Astra Control Automation のドキュメント"^]
+
+
+.アストラファミリー
+Astraファミリーのドキュメントには、Astraと関連ソフトウェアのインストールと管理に必要なすべての情報が記載されています。
+
+* https://docs.netapp.com/us-en/astra-family/["Astra のドキュメント"^]
+

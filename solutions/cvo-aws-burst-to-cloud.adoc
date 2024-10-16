@@ -1,0 +1,395 @@
+---
+sidebar: sidebar 
+permalink: solutions/cvo-aws-burst-to-cloud.html 
+keywords: bluexp automation catalog, netapp automation solutions, aws, cloud volumes ontap, burst to cloud 
+summary: この記事では、NetApp Cloud Volumes ONTAP for AWS自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。 
+---
+= Cloud Volumes ONTAP for AWS -クラウドへのバースト
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+この記事では、NetApp Cloud Volumes ONTAP for AWS自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。
+
+Cloud Volumes ONTAP for AWS自動化ソリューションは、Terraformを使用してCloud Volumes ONTAP for AWSのコンテナ化された導入を自動化するため、手動操作なしでCloud Volumes ONTAP for AWSを迅速に導入できます。
+
+.開始する前に
+* 自動化ソリューションは、BlueXP  Web UIからダウンロードする必要がありますlink:https://console.bluexp.netapp.com/automationCatalog["Cloud Volumes ONTAP AWS -クラウドへのバースト"^]。ソリューションはとしてパッケージ化されてい `cvo_aws_flexcache.zip`ます。
+* Cloud Volumes ONTAPと同じネットワークにLinux VMをインストールする必要があります。
+* Linux VMをインストールしたら、このソリューションの手順に従って必要な依存関係をインストールする必要があります。
+
+
+
+
+== 手順1：DockerとDocker Composeをインストールする
+
+
+
+=== Docker をインストールする
+
+次の手順では、例としてUbuntu 20.04 Debian Linuxディストリビューションソフトウェアを使用します。実行するコマンドは、使用しているLinuxディストリビューションソフトウェアによって異なります。使用している構成に対応するLinuxディストリビューションソフトウェアのマニュアルを参照してください。
+
+.手順
+. 次のコマンドを実行してDockerをインストールし `sudo`ます。
++
+[source, cli]
+----
+sudo apt-get update
+sudo apt-get install apt-transport-https cacertificates curl gnupg-agent software-properties-common curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
+sudo apt-key add -
+sudo add-apt-repository “deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable”
+sudo apt-get update
+sudo apt-get install dockerce docker-ce-cli containerd.io
+----
+. インストールを確認します。
++
+[source, cli]
+----
+docker –version
+----
+. Linuxシステムに「docker」という名前のグループが作成されていることを確認します。必要に応じて、グループを作成します。
++
+[source, cli]
+----
+sudo groupadd docker
+----
+. Dockerにアクセスする必要があるユーザをグループに追加します。
++
+[source, cli]
+----
+sudo usermod -aG docker $(whoami)
+----
+. 変更内容は、ログアウトして端末に再度ログインした後に適用されます。または、変更をすぐに適用することもできます。
++
+[source, cli]
+----
+newgrp docker
+----
+
+
+
+
+=== Docker Composeのインストール
+
+.手順
+. 次のコマンドを実行して、Docker Composeをインストールし `sudo`ます。
++
+[source, cli]
+----
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+----
+. インストールを確認します。
++
+[source, cli]
+----
+docker-compose –version
+----
+
+
+
+
+== ステップ2：Dockerイメージを準備する
+
+.手順
+. Cloud Volumes ONTAPの導入に使用するLinux VMにフォルダをコピーし `cvo_aws_flexcache.zip`ます。
++
+[source, cli]
+----
+scp -i ~/<private-key>.pem -r cvo_aws_flexcache.zip <awsuser>@<IP_ADDRESS_OF_VM>:<LOCATION_TO_BE_COPIED>
+----
++
+** `private-key.pem`は、パスワードなしでログインするための秘密鍵ファイルです。
+** `awsuser`はVMのユーザ名です。
+** `IP_ADDRESS_OF_VM`はVMのIPアドレスです。
+** `LOCATION_TO_BE_COPIED`は、フォルダがコピーされる場所です。
+
+
+. フォルダを展開し `cvo_aws_flexcache.zip`ます。フォルダは、カレントディレクトリまたはカスタムの場所に展開できます。
++
+現在のディレクトリにフォルダを展開するには、次のコマンドを実行します。
+
++
+[source, cli]
+----
+unzip cvo_aws_flexcache.zip
+----
++
+カスタムの場所にフォルダを抽出するには、次のコマンドを実行します。
+
++
+[source, cli]
+----
+unzip cvo_aws_flexcache.zip -d ~/<your_folder_name>
+----
+. コンテンツを展開したら、フォルダに移動し `CVO_Aws_Deployment`、次のコマンドを実行してファイルを表示します。
++
+[source, cli]
+----
+ ls -la
+----
++
+次の例のようなファイルの一覧が表示されます。
+
++
+[listing]
+----
+total 32
+    drwxr-xr-x   8 user1  staff   256 Mar 23 12:26 .
+    drwxr-xr-x   6 user1  staff   192 Mar 22 08:04 ..
+    -rw-r--r--   1 user1  staff   324 Apr 12 21:37 .env
+    -rw-r--r--   1 user1  staff  1449 Mar 23 13:19 Dockerfile
+    drwxr-xr-x  15 user1  staff   480 Mar 23 13:19 cvo_Aws_source_code
+    drwxr-xr-x   4 user1  staff   128 Apr 27 13:43 cvo_Aws_variables
+    -rw-r--r--   1 user1  staff   996 Mar 24 04:06 docker-compose-deploy.yml
+    -rw-r--r--   1 user1  staff  1041 Mar 24 04:06 docker-compose-destroy.yml
+----
+. ファイルを探します `cvo_aws_flexcache_ubuntu_image.tar`。これには、Cloud Volumes ONTAP for AWSの導入に必要なDockerイメージが含まれています。
+. ファイルを解凍します。
++
+[source, cli]
+----
+docker load -i cvo_aws_flexcache_ubuntu_image.tar
+----
+. Dockerイメージがロードされるまで数分待ってから、Dockerイメージが正常にロードされたことを確認します。
++
+[source, cli]
+----
+docker images
+----
++
+次の例に示すように、タグで `latest`という名前のDockerイメージが表示され `cvo_aws_flexcache_ubuntu_image`ます。
+
++
+[listing]
+----
+REPOSITORY                            TAG        IMAGE ID       CREATED      SIZE
+ cvo_aws_flexcache_ubuntu_image     latest    18db15a4d59c   2 weeks ago   1.14GB
+----
++
+
+NOTE: 必要に応じて、Dockerイメージの名前を変更できます。Dockerイメージ名を変更した場合は、ファイルと `docker-compose-destroy`ファイルでDockerイメージ名を更新して `docker-compose-deploy`ください。
+
+
+
+
+
+== 手順3:環境変数ファイルを作成する
+
+この段階では、2つの環境変数ファイルを作成する必要があります。1つは、AWSのアクセスキーとシークレットキーを使用したAWS Resource Manager APIの認証用です。2つ目のファイルは、BlueXP  TerraformモジュールがAWS APIを検索して認証できるように環境変数を設定するためのものです。
+
+.手順
+. 次の場所にファイルを作成し `awsauth.env`ます。
++
+`path/to/env-file/awsauth.env`
+
++
+.. ファイルに次の内容を追加し `awsauth.env`ます。
++
+access_key=<> secret_key=<>
+
++
+形式*は上記のとおりである必要があります。
+
+
+
+. ファイルに絶対ファイルパスを追加します `.env`。
++
+環境変数に対応する環境ファイル `AWS_CREDS`の絶対パスを入力し `awsauth.env`ます。
+
++
+`AWS_CREDS=path/to/env-file/awsauth.env`
+
+. フォルダに移動し `cvo_aws_variable`、credentialsファイルのアクセスキーとシークレットキーを更新します。
++
+ファイルに次の内容を追加します。
+
++
+aws_access_key_id=<>aws_secret_access_key=<>
+
++
+形式*は上記のとおりである必要があります。
+
+
+
+
+
+== 手順4：BlueXP  にCloud Volumes ONTAPライセンスを追加するか、BlueXP  にサブスクライブする
+
+Cloud Volumes ONTAPライセンスをBlueXP  に追加するか、AWS MarketplaceでNetApp BlueXP  にサブスクライブできます。
+
+.手順
+. AWSポータルで、* SaaS *に移動し、* NetApp BlueXP  にサブスクライブ*を選択します。
++
+Cloud Volumes ONTAPと同じリソースグループを使用することも別のリソースグループを使用することもできます。
+
+. SaaSサブスクリプションをBlueXP  にインポートするようにBlueXP  ポータルを設定します。
++
+これはAWSポータルから直接設定できます。
+
++
+設定を確認するためにBlueXP  ポータルにリダイレクトされます。
+
+. BlueXP  ポータルで*[保存]*を選択して設定を確認します。
+
+
+
+
+== 手順5：外部ボリュームを作成する
+
+Terraform状態ファイルとその他の重要なファイルを永続的に保持するには、外部ボリュームを作成する必要があります。ワークフローと導入環境を実行するには、Terraformでファイルを使用できることを確認する必要があります。
+
+.手順
+. Docker Composeの外部に外部ボリュームを作成します。
++
+[source, cli]
+----
+docker volume create <volume_name>
+----
++
+例：
+
++
+[listing]
+----
+docker volume create cvo_aws_volume_dst
+----
+. 次のいずれかのオプションを使用します。
++
+.. 環境ファイルに外部ボリュームパスを追加します `.env`。
++
+以下に示す正確な形式に従う必要があります。
+
++
+形式：
+
++
+`PERSISTENT_VOL=path/to/external/volume:/cvo_aws`
+
++
+例：
+`PERSISTENT_VOL=cvo_aws_volume_dst:/cvo_aws`
+
+.. NFS共有を外部ボリュームとして追加
++
+DockerコンテナがNFS共有と通信できること、および読み取り/書き込みなどの適切な権限が設定されていることを確認します。
+
++
+... 次のように、Docker Composeファイルで、外部ボリュームへのパスとしてNFS共有パスを追加します。Format：
++
+`PERSISTENT_VOL=path/to/nfs/volume:/cvo_aws`
+
++
+例：
+`PERSISTENT_VOL=nfs/mnt/document:/cvo_aws`
+
+
+
+
+
+. フォルダに移動し `cvo_aws_variables`ます。
++
+フォルダに次の変数ファイルが表示されます。
+
++
+** `terraform.tfvars`
+** `variables.tf`
+
+
+. 必要に応じて、ファイル内の値を変更し `terraform.tfvars`ます。
++
+ファイル内の変数値を変更する場合は、特定のサポートドキュメントを参照する必要があります `terraform.tfvars`。値は、リージョン、アベイラビリティゾーン、およびCloud Volumes ONTAP for AWSでサポートされるその他の要因によって異なります。これには、シングルノードおよびハイアベイラビリティ（HA）ペアのライセンス、ディスクサイズ、VMサイズが含まれます。
+
++
+ConnectorおよびCloud Volumes ONTAP Terraformモジュールでサポートされるすべての変数は、ファイルにすでに定義されてい `variables.tf`ます。ファイルに追加する前に、ファイル `terraform.tfvars`内の変数名を参照する必要があります `variables.tf`。
+
+. 要件に応じて、次のオプションをまたは `false`に設定することで、FlexCacheおよびFlexCloneを有効または無効にできます `true`。
++
+次に、FlexCacheとFlexCloneを有効にする例を示します。
+
++
+** `is_flexcache_required = true`
+** `is_flexclone_required = true`
+
+
+
+
+
+
+== ステップ6：Cloud Volumes ONTAP for AWSを導入する
+
+Cloud Volumes ONTAP for AWSを導入するには、次の手順を実行します。
+
+.手順
+. ルートフォルダから次のコマンドを実行して導入を開始します。
++
+[source, cli]
+----
+docker-compose -f docker-compose-deploy.yml up -d
+----
++
+2つのコンテナがトリガーされます。1つ目のコンテナはCloud Volumes ONTAPを導入し、2つ目のコンテナはAutoSupportに計測データを送信します。
+
++
+2番目のコンテナは、最初のコンテナがすべてのステップを正常に完了するまで待機します。
+
+. ログファイルを使用して導入プロセスの進行状況を監視します。
++
+[source, cli]
+----
+docker-compose -f docker-compose-deploy.yml logs -f
+----
++
+このコマンドは、出力をリアルタイムで提供し、次のログファイルのデータをキャプチャします。
+`deployment.log`
+
++
+`telemetry_asup.log`
+
++
+これらのログファイルの名前を変更するには、次の環境変数を使用してファイルを編集し `.env`ます。
+
++
+`DEPLOYMENT_LOGS`
+
++
+`TELEMETRY_ASUP_LOGS`
+
++
+次の例は、ログファイル名を変更する方法を示しています。
+
++
+`DEPLOYMENT_LOGS=<your_deployment_log_filename>.log`
+
++
+`TELEMETRY_ASUP_LOGS=<your_telemetry_asup_log_filename>.log`
+
+
+
+.終了後
+次の手順を使用して、一時的な環境を削除し、導入プロセス中に作成された項目をクリーンアップできます。
+
+.手順
+. FlexCacheを導入した場合は、変数ファイルで次のオプションを設定する `terraform.tfvars`と、FlexCacheボリュームがクリーンアップされ、前の手順で作成した一時環境が削除されます。
++
+`flexcache_operation = "destroy"`
+
++
+
+NOTE: 指定可能なオプションは `deploy`、および `destroy`です。
+
+. FlexCloneを導入した場合は、変数ファイルで次のオプションを設定する `terraform.tfvars`と、FlexCloneボリュームがクリーンアップされ、前の手順で作成した一時環境が削除されます。
++
+`flexclone_operation = "destroy"`
+
++
+
+NOTE: 指定可能なオプションは `deploy`、および `destroy`です。
+
+

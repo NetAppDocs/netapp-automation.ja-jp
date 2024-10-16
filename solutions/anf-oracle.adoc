@@ -1,0 +1,360 @@
+---
+sidebar: sidebar 
+permalink: solutions/anf-oracle.html 
+keywords: bluexp automation catalog, netapp automation solutions, azure, azure netapp files, oracle 
+summary: この自動化ソリューションを使用すると、Azure NetApp Filesボリュームをプロビジョニングし、使用可能な仮想マシンにOracleをインストールできます。その後、Oracleはこのボリュームをデータストレージに使用します。 
+---
+= Azure NetApp Filesを使用したOracleのインストール
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+この自動化ソリューションを使用すると、Azure NetApp Filesボリュームをプロビジョニングし、使用可能な仮想マシンにOracleをインストールできます。その後、Oracleはこのボリュームをデータストレージに使用します。
+
+.このソリューションについて
+このソリューションで提供される自動化コードでは、大まかに次の処理が実行されます。
+
+* AzureでのNetAppアカウントのセットアップ
+* Azureでストレージ容量プールをセットアップする
+* 定義に基づいてAzure NetApp Filesをプロビジョニング
+* マウントポイントの作成
+* マウントポイントへのAzure NetApp Filesボリュームのマウント
+* LinuxサーバへのOracleのインストール
+* リスナーとデータベースの作成
+* Pluggable Database（PDB）の作成
+* リスナーとOracleインスタンスの起動
+* ユーティリティをインストールし、スナップショットを作成するように設定します。 `azacsnap`
+
+
+.開始する前に
+インストールを完了するには、次のものが必要です。
+
+* BlueXP  Web UIから自動化ソリューションをダウンロードする必要があり https://console.bluexp.netapp.com/automationCatalog["Azure NetApp Filesを使用したOracle"^]ます。ソリューションはファイルとしてパッケージ化され `na_oracle19c_deploy-master.zip`ます。
+* 次の特性を持つLinux VM：
++
+** RHEL 8（Standard_D8s_v3 - RHEL-8）
+** Azure NetApp Filesのプロビジョニングと同じAzure仮想ネットワークに導入
+
+
+* Azureアカウント
+
+
+自動化ソリューションはイメージとして提供され、DockerとDocker Composeを使用して実行されます。以下で説明するように、これらの両方をLinux仮想マシンにインストールする必要があります。
+
+また、コマンドを使用してVMをRedHatに登録する必要があります `sudo subscription-manager register`。アカウントのクレデンシャルの入力を求めるプロンプトが表示されます。必要に応じて、\https://developers.redhat.com/.でアカウントを作成できます。
+
+
+
+== 手順1：Dockerをインストールして設定する
+
+RHEL 8 Linux仮想マシンにDockerをインストールして設定します。
+
+.手順
+. 次のコマンドを使用してDockerソフトウェアをインストールします。
++
+[source, cli]
+----
+dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+dnf install docker-ce --nobest -y
+----
+. Dockerを起動してバージョンを表示し、インストールが正常に完了したことを確認します。
++
+[source, cli]
+----
+systemctl start docker
+systemctl enable docker
+docker --version
+----
+. 必要なLinuxグループをユーザと関連付けて追加します。
++
+最初に、グループ* Docker *がLinuxシステムに存在するかどうかを確認します。表示されない場合は、グループを作成してユーザを追加します。デフォルトでは、現在のシェルユーザがグループに追加されます。
+
++
+[source, cli]
+----
+sudo groupadd docker
+sudo usermod -aG docker $USER
+----
+. 新しいグループとユーザ定義をアクティブ化する
++
+ユーザを使用して新しいグループを作成した場合は、定義をアクティブ化する必要があります。これを行うには、Linuxからログアウトしてから再度ログインします。または、次のコマンドを実行します。
+
++
+[source, cli]
+----
+newgrp docker
+----
+
+
+
+
+== 手順2：Docker ComposeとNFSユーティリティをインストールする
+
+NFSユーティリティパッケージと一緒にDocker Composeをインストールして設定します。
+
+.手順
+. Docker Composeをインストールしてバージョンを表示し、インストールが正常に完了したことを確認します。
++
+[source, cli]
+----
+dnf install curl -y
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+----
+. NFSユーティリティパッケージをインストールします。
++
+[source, cli]
+----
+sudo yum install nfs-utils
+----
+
+
+
+
+== 手順3：Oracleインストールファイルをダウンロードする
+
+必要なOracleインストールファイルとパッチファイル、およびユーティリティをダウンロードし `azacsnap`ます。
+
+.手順
+. 必要に応じてOracleアカウントにサインインします。
+. 次のファイルをダウンロードします。
++
+[cols="65,35"]
+|===
+| ファイル | 製品説明 
+
+
+| LINUX.X64_193000_db_home.zip | 19.3ベースインストーラ 
+
+
+| p31281355_190000_Linux-x86-64.zip | 19.8 RUパッチ 
+
+
+| p6880880_190000_Linux-x86-64.zip | Opatchバージョン12.2.0.1.23 
+
+
+| azacsnap_installer_v5.0.ru | azacsnapインストーラ 
+|===
+. すべてのインストールファイルをフォルダに配置し `/tmp/archive`ます。
+. データベース・サーバ上のすべてのユーザが'フォルダに対するフル・アクセス（読み取り'書き込み'実行）を持っていることを確認し `/tmp/archive`ます
+
+
+
+
+== ステップ4：Dockerイメージを準備する
+
+自動化ソリューションに付属のDockerイメージを抽出してロードする必要があります。
+
+.手順
+. ソリューションファイルを、自動化コードを実行する仮想マシンにコピーし `na_oracle19c_deploy-master.zip`ます。
++
+[source, cli]
+----
+scp -i ~/<private-key.pem> -r na_oracle19c_deploy-master.zip user@<IP_ADDRESS_OF_VM>
+----
++
+入力パラメータ `private-key.pem`は、Azure仮想マシンの認証に使用する秘密鍵ファイルです。
+
+. ソリューションファイルを含む適切なフォルダに移動し、ファイルを解凍します。
++
+[source, cli]
+----
+unzip na_oracle19c_deploy-master.zip
+----
+. 解凍操作で作成された新しいフォルダに移動し `na_oracle19c_deploy-master`、ファイルを一覧表示します。ファイルが表示されます `ora_anf_bck_image.tar`。
++
+[source, cli]
+----
+ls -lt
+----
+. Dockerイメージファイルをロードします。ロード操作は通常数秒で完了します。
++
+[source, cli]
+----
+docker load -i ora_anf_bck_image.tar
+----
+. Dockerイメージがロードされたことを確認します。
++
+[source, cli]
+----
+docker images
+----
++
+タグが付いた `latest`Dockerイメージが表示されます `ora_anf_bck_image`。
+
++
+[listing]
+----
+   REPOSITORY          TAG       IMAGE ID      CREATED      SIZE
+ora_anf_bck_image    latest   ay98y7853769   1 week ago   2.58GB
+----
+
+
+
+
+== 手順5：外部ボリュームを作成する
+
+Terraform状態ファイルやその他の重要なファイルが永続的であることを確認するには、外部ボリュームが必要です。ワークフローとデプロイメントを実行するには、Terraformでこれらのファイルが使用可能である必要があります。
+
+.手順
+. Docker Composeの外部に外部ボリュームを作成します。
++
+コマンドを実行する前に、必ずボリューム名を更新してください。
+
++
+[source, cli]
+----
+docker volume create <VOLUME_NAME>
+----
+. コマンドを使用して、外部ボリュームへのパスを環境ファイルに追加し `.env`ます。
++
+`PERSISTENT_VOL=path/to/external/volume:/ora_anf_prov`です。
+
++
+既存のファイルの内容とコロンの書式を維持することを忘れないでください。例：
+
++
+[source, cli]
+----
+PERSISTENT_VOL= ora_anf _volume:/ora_anf_prov
+----
+. Terraform変数を更新します。
++
+.. フォルダに移動し `ora_anf_variables`ます。
+.. との `variables.tf`2つのファイルが存在することを確認します `terraform.tfvars`。
+.. 環境に応じて、の値を更新します `terraform.tfvars`。
+
+
+
+
+
+
+== 手順6：Oracleをインストールする
+
+これで、Oracleのプロビジョニングとインストールが可能になりました。
+
+.手順
+. 次の一連のコマンドを使用してOracleをインストールします。
++
+[source, cli]
+----
+docker-compose up terraform_ora_anf
+bash /ora_anf_variables/setup.sh
+docker-compose up linux_config
+bash /ora_anf_variables/permissions.sh
+docker-compose up oracle_install
+----
+. Bash変数をリロードし、の値を表示して確認します `ORACLE_HOME`。
++
+.. `cd /home/oracle`
+.. `source .bash_profile`
+.. `echo $ORACLE_HOME`
+
+
+. Oracleにログインできる必要があります。
++
+[source, cli]
+----
+sudo su oracle
+----
+
+
+
+
+== 手順7：Oracleのインストールを検証する
+
+Oracleのインストールが正常に完了したことを確認する必要があります。
+
+.手順
+. Linux Oracleサーバにログインし、Oracleプロセスのリストを表示します。これにより、インストールが想定どおりに完了し、Oracleデータベースが実行されていることが確認されます。
++
+[source, cli]
+----
+ps -ef | grep ora
+----
+. データベースにログインしてデータベース設定を調べ、PDBが正しく作成されたことを確認します。
++
+[source, cli]
+----
+sqlplus / as sysdba
+----
++
+次のような出力が表示されます。
+
++
+[listing]
+----
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu May 6 12:52:51 2021
+Version 19.8.0.0.0
+
+Copyright (c) 1982, 2019, Oracle. All rights reserved.
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.8.0.0.0
+----
+. いくつかの簡単なSQLコマンドを実行して、データベースが使用可能であることを確認します。
++
+[source, sql]
+----
+select name, log_mode from v$database;
+show pdbs.
+----
+
+
+
+
+== 手順8：azacsnapユーティリティをインストールしてスナップショット・バックアップを実行する
+
+スナップショットバックアップを実行するには、ユーティリティをインストールして実行する必要があり `azacsnap`ます。
+
+.手順
+. コンテナを取り付けます。
++
+[source, sql]
+----
+docker-compose up azacsnap_install
+----
+. スナップショットユーザーアカウントに切り替えます。
++
+[source, sql]
+----
+su - azacsnap
+execute /tmp/archive/ora_wallet.sh
+----
+. ストレージバックアップの詳細ファイルを設定これにより、構成ファイルが作成され `azacsnap.json`ます。
++
+[source, sql]
+----
+cd /home/azacsnap/bin/
+azacsnap -c configure –-configuration new
+----
+. スナップショットバックアップを実行します。
++
+[source, sql]
+----
+azacsnap -c backup –-other data --prefix ora_test --retention=1
+----
+
+
+
+
+== ステップ9：必要に応じてオンプレミスのPDBをクラウドに移行
+
+必要に応じて、オンプレミスのPDBをクラウドに移行できます。
+
+.手順
+. 環境に応じて、ファイルに変数を設定し `tfvars`ます。
+. PDBを移行します。
++
+[source, cli]
+----
+docker-compose -f docker-compose-relocate.yml up
+----
+

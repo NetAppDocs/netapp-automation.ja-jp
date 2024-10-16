@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: api/ontap.html 
+keywords: netapp products, product api, rest, rest api, ontap, ontap 9 
+summary: NetApp ONTAPは、クラウド環境とオンプレミス環境の両方に対応する、業界をリードするデータ管理ソフトウェアです。ONTAPには共通のREST APIが1つ含まれており、リリースごとに拡張および強化されています。ONTAP環境の自動化を開始するには、以下のドキュメントと関連リソースを参照してください。 
+---
+= ONTAP 9
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetApp ONTAPは、クラウド環境とオンプレミス環境の両方に対応する、業界をリードするデータ管理ソフトウェアです。ONTAPには共通のREST APIが1つ含まれており、リリースごとに拡張および強化されています。ONTAP REST APIを使用したONTAP環境の自動化を開始するには、以下のドキュメントと関連リソースを参照してください。
+
+.ONTAP REST API
+REST APIを使用すると、ONTAP環境の管理を自動化できます。
+
+* https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自動化に関するドキュメント"^]
+
+
+.ONTAPファミリー
+ONTAPファミリーのドキュメントには、ONTAP環境のインストールと管理に必要なすべての情報が記載されています。
+
+* https://docs.netapp.com/us-en/ontap-family/["ONTAP 製品ドキュメント"^]
+
