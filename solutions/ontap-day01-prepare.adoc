@@ -66,7 +66,7 @@ NOTE: Mac OSを使用している場合は、Intelプロセッサが必要です
 .手順
 ローカル環境に2つのONTAPシミュレータをインストールするには、次の手順を実行します。
 
-. からSimulate ONTAPをダウンロードしますlink:https://mysupport.netapp.com/site/tools/tool-eula/simulate-ontap["NetApp Support Site"^]。
+. からSimulate ONTAPをダウンロードしますlink:https://mysupport.netapp.com/site/tools/tool-eula/ontap-simulate["NetApp Support Site"^]。
 +
 
 NOTE: 2つのONTAPシミュレータをインストールしますが、ダウンロードする必要があるのはソフトウェアのコピーを1つだけです。
