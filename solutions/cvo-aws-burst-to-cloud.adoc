@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: solutions/cvo-aws-burst-to-cloud.html 
 keywords: bluexp automation catalog, netapp automation solutions, aws, cloud volumes ontap, burst to cloud 
-summary: この記事では、NetApp Cloud Volumes ONTAP for AWS自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。 
+summary: この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for AWS 自動化ソリューションをサポートしています。 
 ---
 = Cloud Volumes ONTAP for AWS -クラウドへのバースト
 :hardbreaks:
@@ -14,12 +14,12 @@ summary: この記事では、NetApp Cloud Volumes ONTAP for AWS自動化ソリ�
 
 
 [role="lead"]
-この記事では、NetApp Cloud Volumes ONTAP for AWS自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。
+この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for AWS 自動化ソリューションをサポートしています。
 
 Cloud Volumes ONTAP for AWS自動化ソリューションは、Terraformを使用してCloud Volumes ONTAP for AWSのコンテナ化された導入を自動化するため、手動操作なしでCloud Volumes ONTAP for AWSを迅速に導入できます。
 
 .開始する前に
-* 自動化ソリューションは、BlueXP  Web UIからダウンロードする必要がありますlink:https://console.bluexp.netapp.com/automationCatalog["Cloud Volumes ONTAP AWS -クラウドへのバースト"^]。ソリューションはとしてパッケージ化されてい `cvo_aws_flexcache.zip`ます。
+* ダウンロードする必要がありますlink:https://console.netapp.com/automationCatalog["Cloud Volumes ONTAP AWS -クラウドへのバースト"^]コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `cvo_aws_flexcache.zip` 。
 * Cloud Volumes ONTAPと同じネットワークにLinux VMをインストールする必要があります。
 * Linux VMをインストールしたら、このソリューションの手順に従って必要な依存関係をインストールする必要があります。
 
@@ -182,7 +182,7 @@ NOTE: 必要に応じて、Dockerイメージの名前を変更できます。Do
 
 == 手順3:環境変数ファイルを作成する
 
-この段階では、2つの環境変数ファイルを作成する必要があります。1つは、AWSのアクセスキーとシークレットキーを使用したAWS Resource Manager APIの認証用です。2つ目のファイルは、BlueXP  TerraformモジュールがAWS APIを検索して認証できるように環境変数を設定するためのものです。
+この段階では、2 つの環境変数ファイルを作成する必要があります。  1 つのファイルは、AWS アクセスキーと秘密キーを使用して AWS Resource Manager API を認証するためのものです。  2 番目のファイルは、コンソール Terraform モジュールが AWS API を見つけて認証できるように環境変数を設定するためのものです。
 
 .手順
 . 次の場所にファイルを作成し `awsauth.env`ます。
@@ -220,23 +220,23 @@ aws_access_key_id=<>aws_secret_access_key=<>
 
 
 
-== 手順4：BlueXP  にCloud Volumes ONTAPライセンスを追加するか、BlueXP  にサブスクライブする
+== ステップ4： NetAppインテリジェントサービスにサインアップする
 
-Cloud Volumes ONTAPライセンスをBlueXP  に追加するか、AWS MarketplaceでNetApp BlueXP  にサブスクライブできます。
+クラウド プロバイダーを通じてNetApp Intelligent Services にサインアップし、時間単位 (PAYGO) または年間契約で支払います。NetAppインテリジェント サービスには、 NetAppバックアップおよびリカバリ、 Cloud Volumes ONTAP、 NetAppクラウド階層化、 NetAppランサムウェア回復力、 NetAppディザスタ リカバリが含まれます。NetApp Data Classification は追加料金なしでサブスクリプションに含まれています。
 
 .手順
-. AWSポータルで、* SaaS *に移動し、* NetApp BlueXP  にサブスクライブ*を選択します。
+. Amazon Web Services (AWS) ポータルから、*SaaS* に移動し、* NetApp Intelligent Services にサブスクライブ* を選択します。
 +
 Cloud Volumes ONTAPと同じリソースグループを使用することも別のリソースグループを使用することもできます。
 
-. SaaSサブスクリプションをBlueXP  にインポートするようにBlueXP  ポータルを設定します。
+. NetAppコンソール ポータルを構成して、SaaS サブスクリプションをコンソールにインポートします。
 +
 これはAWSポータルから直接設定できます。
 
 +
-設定を確認するためにBlueXP  ポータルにリダイレクトされます。
+構成を確認するためにコンソール ポータルにリダイレクトされます。
 
-. BlueXP  ポータルで*[保存]*を選択して設定を確認します。
+. *保存*を選択して、コンソール ポータルで構成を確認します。
 
 
 
@@ -307,7 +307,7 @@ DockerコンテナがNFS共有と通信できること、および読み取り/�
 ファイル内の変数値を変更する場合は、特定のサポートドキュメントを参照する必要があります `terraform.tfvars`。値は、リージョン、アベイラビリティゾーン、およびCloud Volumes ONTAP for AWSでサポートされるその他の要因によって異なります。これには、シングルノードおよびハイアベイラビリティ（HA）ペアのライセンス、ディスクサイズ、VMサイズが含まれます。
 
 +
-ConnectorおよびCloud Volumes ONTAP Terraformモジュールでサポートされるすべての変数は、ファイルにすでに定義されてい `variables.tf`ます。ファイルに追加する前に、ファイル `terraform.tfvars`内の変数名を参照する必要があります `variables.tf`。
+コンソールエージェントとCloud Volumes ONTAP Terraformモジュールのすべてのサポート変数は、 `variables.tf`ファイル。変数名を参照する必要があります `variables.tf`ファイルに追加する前に `terraform.tfvars`ファイル。
 
 . 要件に応じて、次のオプションをまたは `false`に設定することで、FlexCacheおよびFlexCloneを有効または無効にできます `true`。
 +

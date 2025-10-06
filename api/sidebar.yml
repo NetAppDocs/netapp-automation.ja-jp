@@ -4,8 +4,8 @@ title: NetApp製品API
 entries:
 - title: ONTAP
   url: "/api/ontap.html"
-- title: BlueXP
-  url: "/api/bluexp.html"
+- title: NetAppコンソール
+  url: "/api/netapp-console.html"
 - title: Astra Control
   url: "/api/astra.html"
 - title: Active IQ Unified Manager

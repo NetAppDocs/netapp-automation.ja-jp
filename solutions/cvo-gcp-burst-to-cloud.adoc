@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: solutions/cvo-gcp-burst-to-cloud.html 
-keywords: bluexp automation catalog, netapp automation solutions, gcp, cloud volumes ontap, burst to cloud 
-summary: この記事では、NetApp Cloud Volumes ONTAP for Google Cloud自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。 
+keywords: bluexp automation catalog, netapp automation solutions, gcp, cloud volumes ontap, burst to cloud, netapp, console 
+summary: この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できる、Google Cloud Automation ソリューション向けのNetApp Cloud Volumes ONTAP をサポートしています。 
 ---
 = Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト
 :hardbreaks:
@@ -14,12 +14,12 @@ summary: この記事では、NetApp Cloud Volumes ONTAP for Google Cloud自動�
 
 
 [role="lead"]
-この記事では、NetApp Cloud Volumes ONTAP for Google Cloud自動化ソリューションをサポートしています。このソリューションは、NetAppのお客様がBlueXP  自動化カタログから入手できます。
+この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できる、Google Cloud Automation ソリューション向けのNetApp Cloud Volumes ONTAP をサポートしています。
 
 Cloud Volumes ONTAP for Google Cloud自動化ソリューションは、Cloud Volumes ONTAP for Google Cloudのコンテナ化された導入を自動化し、手動操作なしでCloud Volumes ONTAP for Google Cloudを迅速に導入できるようにします。
 
 .開始する前に
-* 自動化ソリューションは、BlueXP  Web UIからダウンロードする必要がありますlink:https://console.bluexp.netapp.com/automationCatalog["Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト"^]。ソリューションはとしてパッケージ化されてい `cvo_gcp_flexcache.zip`ます。
+* ダウンロードする必要がありますlink:https://console.netapp.com/automationCatalog["Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト"^]コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `cvo_gcp_flexcache.zip` 。
 * Cloud Volumes ONTAPと同じネットワークにLinux VMをインストールする必要があります。
 * Linux VMをインストールしたら、このソリューションの手順に従って必要な依存関係をインストールする必要があります。
 
@@ -184,7 +184,7 @@ NOTE: 必要に応じて、Dockerイメージの名前を変更できます。Do
 
 この段階で、Google Cloudプロバイダを認証するためにサービスアカウントキーを使用してファイルを更新する必要があります `cxo-automation-gcp.json`。
 
-. Cloud Volumes ONTAPとBlueXP  Connectorを導入する権限を持つサービスアカウントを作成します。link:https://cloud.google.com/iam/docs/service-accounts-create["サービスアカウントの作成について詳しくは、こちらをご覧ください。"^]
+. Cloud Volumes ONTAPとコンソールエージェントをデプロイする権限を持つサービスアカウントを作成します。link:https://cloud.google.com/iam/docs/service-accounts-create["サービスアカウントの作成について詳しくは、こちらをご覧ください。"^]
 . アカウントのキーファイルをダウンロードし、キーファイル情報でファイルを更新します `cxo-automation-gcp.json`。 `cxo-automation-gcp.json`ファイルはフォルダにあり `cvo_gcp_variables`ます。
 +
 .例
@@ -211,26 +211,26 @@ NOTE: 必要に応じて、Dockerイメージの名前を変更できます。Do
 
 
 
-== 手順4：BlueXP  にサブスクライブする
+== ステップ4： NetAppインテリジェントサービスにサインアップする
 
-Google Cloud MarketplaceでNetApp BlueXP  に登録できます。
+クラウド プロバイダーを通じてNetApp Intelligent Services にサインアップし、時間単位 (PAYGO) または年間契約で支払います。NetAppインテリジェント サービスには、 NetAppバックアップおよびリカバリ、 Cloud Volumes ONTAP、 NetAppクラウド階層化、 NetAppランサムウェア回復力、 NetAppディザスタ リカバリが含まれます。NetApp Data Classification は追加料金なしでサブスクリプションに含まれています。
 
 .手順
-. に移動しlink:https://console.cloud.google.com/marketplace/product/netapp-cloudmanager/cloud-manager["Google Cloudコンソール"^]、* NetApp BlueXP  にサブスクライブ*を選択します。
-. SaaSサブスクリプションをBlueXP  にインポートするようにBlueXP  ポータルを設定します。
+. に移動link:https://console.cloud.google.com/marketplace/product/netapp-cloudmanager/cloud-manager["Google Cloudコンソール"^]* NetApp Intelligent Services にサブスクライブ*を選択します。
+. NetAppコンソール ポータルを構成して、SaaS サブスクリプションをコンソールにインポートします。
 +
-これはGoogle Cloud Platformから直接設定できます。設定を確認するためにBlueXP  ポータルにリダイレクトされます。
+これは Google Cloud Platform から直接設定できます。構成を確認するためにコンソール ポータルにリダイレクトされます。
 
-. BlueXP  ポータルで*[保存]*を選択して設定を確認します。
+. *保存*を選択して、コンソール ポータルで構成を確認します。
 
 
-詳細については、を参照してください link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-adding-gcp-accounts.html#associate-a-marketplace-subscription-with-google-cloud-credentials["BlueXPのGoogle Cloudクレデンシャルとサブスクリプションを管理します"^]。
+詳細については、以下を参照してください。 link:https://docs.netapp.com/us-en/console-setup-admin/task-adding-gcp-accounts.html#associate-a-marketplace-subscription-with-google-cloud-credentials["NetAppコンソールの Google Cloud 認証情報とサブスクリプションを管理する"^] 。
 
 
 
 == ステップ5：必要なGoogle Cloud APIを有効にする
 
-Cloud Volumes ONTAPとコネクタをデプロイするには、プロジェクトで次のGoogle Cloud APIを有効にする必要があります。
+Cloud Volumes ONTAPとコンソール エージェントをデプロイするには、プロジェクトで次の Google Cloud API を有効にする必要があります。
 
 * Cloud Deployment Manager V2 API
 * クラウドロギング API
@@ -309,7 +309,7 @@ DockerコンテナがNFS共有と通信できること、および読み取り/�
 ファイル内の変数値を変更する場合は、特定のサポートドキュメントを参照する必要があります `terraform.tfvars`。値は、リージョン、アベイラビリティゾーン、およびCloud Volumes ONTAP for Google Cloudでサポートされているその他の要因によって異なります。これには、シングルノードおよびハイアベイラビリティ（HA）ペアのライセンス、ディスクサイズ、VMサイズが含まれます。
 
 +
-ConnectorおよびCloud Volumes ONTAP Terraformモジュールでサポートされるすべての変数は、ファイルにすでに定義されてい `variables.tf`ます。ファイルに追加する前に、ファイル `terraform.tfvars`内の変数名を参照する必要があります `variables.tf`。
+コンソールエージェントとCloud Volumes ONTAP Terraformモジュールのすべてのサポート変数は、 `variables.tf`ファイル。変数名を参照する必要があります `variables.tf`ファイルに追加する前に `terraform.tfvars`ファイル。
 
 . 要件に応じて、次のオプションをまたは `false`に設定することで、FlexCacheおよびFlexCloneを有効または無効にできます `true`。
 +

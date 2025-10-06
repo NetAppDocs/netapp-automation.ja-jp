@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: api/netapp-console.html 
+keywords: netapp products, product api, rest, rest api, bluexp, bluexp control plane, netapp, console 
+summary: NetAppコンソールは、オンプレミスとパブリック クラウド環境の両方にわたってストレージとデータ サービスを管理するためのハイブリッド マルチクラウド プラットフォームを提供する統合コントロール プレーンです。これは複数の異なるサービスまたはコンポーネントで構成され、それぞれが関連する REST API を公開します。コンソール REST API を使用してコンソールで環境の自動化を開始するには、以下のドキュメントと関連リソースを参照してください。 
+---
+= NetAppコンソールコントロールプレーン
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetAppコンソールは、オンプレミスとパブリック クラウド環境の両方にわたってストレージとデータ サービスを管理するためのハイブリッド マルチクラウド プラットフォームを提供する統合コントロール プレーンです。これは複数の異なるサービスまたはコンポーネントで構成され、それぞれが関連する REST API を公開します。コンソール REST API を使用してコンソールで環境の自動化を開始するには、以下のドキュメントと関連リソースを参照してください。
+
+.NetAppコンソール REST API
+さまざまな REST API を使用して、コンソールによって管理されるストレージおよびデータ サービスの管理を自動化できます。
+
+* https://docs.netapp.com/us-en/console-automation/["NetAppコンソール API ドキュメント"^]
+
+
+.NetAppコンソールファミリー
+コンソール ファミリのドキュメントには、コンソール コントロール プレーンの使用を開始するために必要なものがすべて含まれています。
+
+* https://docs.netapp.com/us-en/console-family/["NetAppコンソールのドキュメント"^]
+

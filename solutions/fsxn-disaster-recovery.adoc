@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: solutions/fsxn-disaster-recovery.html 
-keywords: bluexp automation catalog, netapp automation solutions, fsx for ontap, disaster recovery, backup 
+keywords: bluexp automation catalog, netapp automation solutions, fsx for ontap, disaster recovery, backup, netapp console 
 summary: この自動化ソリューションを使用すると、Amazon FSx for NetApp ONTAPを使用してソースシステムのディザスタリカバリバックアップを作成できます。 
 ---
-= Amazon FSx for NetApp ONTAP -ディザスタリカバリ
+= Amazon FSx for NetApp ONTAP管理 - 災害復旧
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,10 +14,10 @@ summary: この自動化ソリューションを使用すると、Amazon FSx for
 
 
 [role="lead"]
-この自動化ソリューションを使用すると、Amazon FSx for NetApp ONTAPを使用してソースシステムのディザスタリカバリバックアップを作成できます。
+この自動化ソリューションを使用すると、 Amazon FSx for NetApp ONTAP管理を使用してソースシステムの災害復旧バックアップを取得できます。
 
 
-NOTE: Amazon FSx for NetApp ONTAPは、* FSx for ONTAP *とも呼ばれます。
+NOTE: Amazon FSx for NetApp ONTAP管理は、*FSx for ONTAP*とも呼ばれます。
 
 .このソリューションについて
 このソリューションで提供される自動化コードでは、大まかに次の処理が実行されます。
@@ -36,7 +36,7 @@ NOTE: Amazon FSx for NetApp ONTAPは、* FSx for ONTAP *とも呼ばれます。
 .開始する前に
 プロビジョニングと設定を完了するには、次の情報が必要です。
 
-* BlueXP  Web UIから自動化ソリューションをダウンロードする必要があり https://console.bluexp.netapp.com/automationCatalog["Amazon FSx for NetApp ONTAP -ディザスタリカバリ"^]ます。ソリューションはとしてパッケージ化されてい `FSxN_DR.zip`ます。このzipには、このドキュメントで説明しているソリューションの導入に使用するファイルが含まれてい `AWS_FSxN_Bck_Prov.zip`ます。
+* ダウンロードする必要があります https://console.netapp.com/automationCatalog["Amazon FSx for NetApp ONTAP管理 - 災害復旧"^]NetAppコンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `FSxN_DR.zip` 。このzipには、 `AWS_FSxN_Bck_Prov.zip`このドキュメントで説明されているソリューションを展開するために使用するファイルです。
 * ソースシステムとデスティネーションシステム間のネットワーク接続。
 * 次の特性を持つLinux VM：
 +

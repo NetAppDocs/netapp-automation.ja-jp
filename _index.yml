@@ -9,7 +9,7 @@ indexpage:
     links:
     - title: 新機能
       url: "/about/whats-new.html"
-    - title: BlueXP自動化カタログ
+    - title: NetAppコンソール自動化カタログ
       url: "/solutions/bac-overview.html"
     - title: その他のリソース
       url: "/support/additional-resources.html"
@@ -25,8 +25,8 @@ indexpage:
     links:
     - title: ONTAP
       url: "/api/ontap.html"
-    - title: BlueXP
-      url: "/api/bluexp.html"
+    - title: NetAppコンソール
+      url: "/api/netapp-console.html"
     - title: Astra Control
       url: "/api/astra.html"
     - title: Active IQ Unified Manager

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: solutions/ontap-day01-customize.html 
-keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, customize, add roles 
+keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, customize, add roles, netapp console 
 summary: ONTAPのDay 0/1ソリューションを要件に合わせてカスタマイズするには、Ansibleのロールを追加または変更します。 
 ---
 = ONTAP Day 0/1ソリューションのカスタマイズ
