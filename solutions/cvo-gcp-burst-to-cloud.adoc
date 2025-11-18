@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: solutions/cvo-gcp-burst-to-cloud.html 
-keywords: bluexp automation catalog, netapp automation solutions, gcp, cloud volumes ontap, burst to cloud, netapp, console 
-summary: この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できる、Google Cloud Automation ソリューション向けのNetApp Cloud Volumes ONTAP をサポートしています。 
+keywords: bluexp automation hub, netapp automation solutions, gcp, cloud volumes ontap, burst to cloud, netapp, console 
+summary: この記事は、NetApp Console Automation ハブからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for Google Cloud Automation ソリューションをサポートしています。 
 ---
 = Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト
 :hardbreaks:
@@ -14,12 +14,12 @@ summary: この記事は、 NetAppコンソール自動化カタログからNetA
 
 
 [role="lead"]
-この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できる、Google Cloud Automation ソリューション向けのNetApp Cloud Volumes ONTAP をサポートしています。
+この記事は、NetApp Console自動化ハブからNetApp のお客様が利用できる、Google Cloud Automation ソリューション向けのNetApp Cloud Volumes ONTAP をサポートしています。
 
 Cloud Volumes ONTAP for Google Cloud自動化ソリューションは、Cloud Volumes ONTAP for Google Cloudのコンテナ化された導入を自動化し、手動操作なしでCloud Volumes ONTAP for Google Cloudを迅速に導入できるようにします。
 
 .開始する前に
-* ダウンロードする必要がありますlink:https://console.netapp.com/automationCatalog["Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト"^]コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `cvo_gcp_flexcache.zip` 。
+* ダウンロードする必要があります link:https://console.netapp.com/automationHub["Cloud Volumes ONTAP for Google Cloud -クラウドへのバースト"^] コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `cvo_gcp_flexcache.zip`。
 * Cloud Volumes ONTAPと同じネットワークにLinux VMをインストールする必要があります。
 * Linux VMをインストールしたら、このソリューションの手順に従って必要な依存関係をインストールする必要があります。
 

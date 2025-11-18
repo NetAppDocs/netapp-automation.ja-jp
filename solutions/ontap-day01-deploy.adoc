@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: solutions/ontap-day01-deploy.html 
-keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, deploy, netapp console 
+keywords: bluexp automation hub, netapp automation solutions, ontap day 0/1, deploy, netapp console 
 summary: 準備と計画が完了すると、ONTAPの導入初日のソリューションを使用して、Ansibleを使用してONTAPクラスタを迅速に構成できるようになります。 
 ---
 = ソリューションを使用したONTAPクラスタの導入

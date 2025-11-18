@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: solutions/fsxn-burst-to-cloud.html 
-keywords: bluexp automation catalog, netapp automation solutions, fsx for ontap, burst to cloud, netapp console 
+keywords: bluexp automation hub, netapp automation solutions, fsx for ontap, burst to cloud, netapp console 
 summary: この自動化ソリューションを使用すると、ボリュームと関連するFlexCacheを使用してAmazon FSx for NetApp ONTAP管理をプロビジョニングできます。 
 ---
 = Amazon FSx for NetApp ONTAP管理 - クラウドへのバースト
@@ -35,7 +35,7 @@ NOTE: Amazon FSx for NetApp ONTAP管理は、*FSx for ONTAP*とも呼ばれま�
 .開始する前に
 プロビジョニングと設定を完了するには、次の情報が必要です。
 
-* ダウンロードする必要があります https://console.netapp.com/automationCatalog["Amazon FSx for NetApp ONTAP管理 - クラウドへのバースト"^]NetAppコンソール Web UI を介した自動化ソリューション。ソリューションはファイルとしてパッケージ化されています `AWS_FSxN_BTC.zip`。
+* ダウンロードする必要があります https://console.netapp.com/automationHub["Amazon FSx for NetApp ONTAP管理 - クラウドへのバースト"^] NetApp ConsoleWeb UI を介した自動化ソリューション。ソリューションはファイルとしてパッケージ化されています `AWS_FSxN_BTC.zip`。
 * ソースシステムとデスティネーションシステム間のネットワーク接続。
 * 次の特性を持つLinux VM：
 +

@@ -9,7 +9,7 @@ indexpage:
     links:
     - title: 新機能
       url: "/about/whats-new.html"
-    - title: NetAppコンソール自動化カタログ
+    - title: NetApp Console自動化ハブ
       url: "/solutions/bac-overview.html"
     - title: その他のリソース
       url: "/support/additional-resources.html"

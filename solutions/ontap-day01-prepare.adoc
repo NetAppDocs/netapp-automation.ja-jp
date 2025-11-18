@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: solutions/ontap-day01-prepare.html 
-keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, prepare, netapp console 
+keywords: bluexp automation hub, netapp automation solutions, ontap day 0/1, prepare, netapp console 
 summary: 自動化ソリューションを導入する前に、ONTAP環境を準備し、Ansibleをインストールして設定する必要があります。 
 ---
 = ONTAP Day 0/1ソリューションの使用準備
@@ -133,7 +133,7 @@ NOTE: Ansibleはシステムの制御ノードにインストールする必要�
 
 導入用の自動化ソリューションをダウンロードして準備するには、次の手順を実行します。
 
-. ダウンロードlink:https://console.netapp.com/automationCatalog["ONTAP - 1日目およびヘルスチェック"^]コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `ONTAP_DAY0_DAY1.zip` 。
+. ダウンロード link:https://console.netapp.com/automationHub["ONTAP - 1日目およびヘルスチェック"^] コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `ONTAP_DAY0_DAY1.zip`。
 . zipフォルダを展開し、Ansible環境内の制御ノード上の目的の場所にファイルをコピーします。
 
 

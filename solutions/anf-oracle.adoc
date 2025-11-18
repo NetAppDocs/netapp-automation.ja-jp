@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: solutions/anf-oracle.html 
-keywords: bluexp automation catalog, netapp automation solutions, azure, azure netapp files, oracle, console 
+keywords: bluexp automation hub, netapp automation solutions, azure, azure netapp files, oracle, console 
 summary: この自動化ソリューションを使用すると、Azure NetApp Filesボリュームをプロビジョニングし、使用可能な仮想マシンにOracleをインストールできます。その後、Oracleはこのボリュームをデータストレージに使用します。 
 ---
 = Azure NetApp Filesを使用したOracleのインストール
@@ -34,7 +34,7 @@ summary: この自動化ソリューションを使用すると、Azure NetApp F
 .開始する前に
 インストールを完了するには、次のものが必要です。
 
-* ダウンロードする必要があります https://console.netapp.com/automationCatalog["Azure NetApp Filesを使用したOracle"^]NetAppコンソール Web UI を介した自動化ソリューション。ソリューションはファイルとしてパッケージ化されています `na_oracle19c_deploy-master.zip`。
+* ダウンロードする必要があります https://console.netapp.com/automationHub["Azure NetApp Filesを使用したOracle"^] NetApp ConsoleWeb UI を介した自動化ソリューション。ソリューションはファイルとしてパッケージ化されています `na_oracle19c_deploy-master.zip`。
 * 次の特性を持つLinux VM：
 +
 ** RHEL 8（Standard_D8s_v3 - RHEL-8）

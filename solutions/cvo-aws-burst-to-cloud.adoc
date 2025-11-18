@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: solutions/cvo-aws-burst-to-cloud.html 
-keywords: bluexp automation catalog, netapp automation solutions, aws, cloud volumes ontap, burst to cloud 
-summary: この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for AWS 自動化ソリューションをサポートしています。 
+keywords: bluexp automation hub, netapp automation solutions, aws, cloud volumes ontap, burst to cloud 
+summary: この記事は、NetApp Console自動化ハブからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for AWS 自動化ソリューションをサポートしています。 
 ---
 = Cloud Volumes ONTAP for AWS -クラウドへのバースト
 :hardbreaks:
@@ -14,12 +14,12 @@ summary: この記事は、 NetAppコンソール自動化カタログからNetA
 
 
 [role="lead"]
-この記事は、 NetAppコンソール自動化カタログからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for AWS 自動化ソリューションをサポートしています。
+この記事は、 NetApp Console自動化ハブからNetApp のお客様が利用できるNetApp Cloud Volumes ONTAP for AWS 自動化ソリューションをサポートしています。
 
 Cloud Volumes ONTAP for AWS自動化ソリューションは、Terraformを使用してCloud Volumes ONTAP for AWSのコンテナ化された導入を自動化するため、手動操作なしでCloud Volumes ONTAP for AWSを迅速に導入できます。
 
 .開始する前に
-* ダウンロードする必要がありますlink:https://console.netapp.com/automationCatalog["Cloud Volumes ONTAP AWS -クラウドへのバースト"^]コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `cvo_aws_flexcache.zip` 。
+* ダウンロードする必要があります link:https://console.netapp.com/automationHub["Cloud Volumes ONTAP AWS -クラウドへのバースト"^] コンソール Web UI を介した自動化ソリューション。このソリューションは次のようにパッケージ化されています。 `cvo_aws_flexcache.zip`。
 * Cloud Volumes ONTAPと同じネットワークにLinux VMをインストールする必要があります。
 * Linux VMをインストールしたら、このソリューションの手順に従って必要な依存関係をインストールする必要があります。
 

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: solutions/ontap-day01-overview.html 
-keywords: bluexp automation catalog, netapp automation solutions, ontap day 0/1, overview, introduction, netapp console 
+keywords: bluexp automation hub, netapp automation solutions, ontap day 0/1, overview, introduction, netapp console 
 summary: ONTAP Day 0/1自動化ソリューションを使用して、Ansibleを使用してONTAPクラスタを導入および構成できます。 
 ---
 = ONTAP Day 0/1ソリューションの概要
@@ -14,7 +14,7 @@ summary: ONTAP Day 0/1自動化ソリューションを使用して、Ansibleを
 
 
 [role="lead"]
-ONTAP Day 0/1 自動化ソリューションを使用すると、Ansible を使用してONTAPクラスターを導入および構成できます。このソリューションは、link:https://console.netapp.com/automationCatalog["NetAppコンソール自動化カタログ"^] 。
+ONTAP Day 0/1 自動化ソリューションを使用すると、Ansible を使用してONTAPクラスターを導入および構成できます。このソリューションは、 link:https://console.netapp.com/automationHub["NetApp Console自動化ハブ"^]。
 
 
 

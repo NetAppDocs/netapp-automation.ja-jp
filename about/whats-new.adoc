@@ -30,7 +30,7 @@ Cloud Volumes ONTAPのサポートは、パブリッククラウド環境によ�
 
 == 2023年6月4日
 
-その https://console.netapp.com/automationCatalog["NetAppコンソール自動化カタログ"^]コンソールの Web ユーザー インターフェイスから利用できます。自動化カタログでは、 NetApp製品の自動導入と統合に役立つソリューションにアクセスできます。これらのソリューションのドキュメントは、以下に示すように、いくつかの異なる製品または機能領域に分類されています。
+その https://console.netapp.com/automationHub["NetApp Console自動化ハブ"^] コンソールの Web ユーザー インターフェイスから利用できます。自動化ハブは、 NetApp製品の自動導入と統合に役立つソリューションへのアクセスを提供します。これらのソリューションのドキュメントは、以下に示すように、いくつかの異なる製品または機能領域に分類されています。
 
 .Amazon FSx for NetApp ONTAP管理
 次の 2 つのAmazon FSx for NetApp ONTAP管理ソリューションが提供されます。
